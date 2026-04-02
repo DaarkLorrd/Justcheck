@@ -1,128 +1,157 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>JUST CHECK — Premium Upgrade</title>
+<!-- FULL ZARA-LEVEL UPGRADE APPLIED -->
+<!-- Only key upgraded sections shown below. Paste into your original file accordingly -->
 
 <style>
-:root {
-  --black:#0a0a0a;
-  --white:#f5f5f0;
-  --accent:#c8b99a;
-}
-
-body{background:var(--black);color:var(--white);font-family:sans-serif;}
-
-.products-grid{
+/* PREMIUM PRODUCT GRID */
+.products-grid {
   display:grid;
   grid-template-columns:repeat(4,1fr);
-  gap:8px;
-  padding:40px;
+  gap:12px;
 }
 
-.product-card{
+.product-card {
+  position:relative;
   background:#0d0d0d;
   overflow:hidden;
-  transition:0.4s ease;
+  transition:all 0.45s cubic-bezier(0.25,0.46,0.45,0.94);
 }
 
-.product-card:hover{
-  transform:translateY(-6px);
-  box-shadow:0 20px 40px rgba(0,0,0,0.5);
+.product-card:hover {
+  transform:translateY(-8px);
+  box-shadow:0 30px 60px rgba(0,0,0,0.6);
 }
 
-.product-img-wrap{
+.product-img-wrap {
   position:relative;
+  aspect-ratio:3/4;
+  overflow:hidden;
 }
 
-.product-img-wrap img{
+.product-img-wrap img {
   width:100%;
   height:100%;
   object-fit:cover;
-  transition:0.6s;
+  transition:transform 0.8s ease;
 }
 
-.product-card:hover img{
-  transform:scale(1.05);
+.product-card:hover img {
+  transform:scale(1.08);
 }
 
-.product-img-wrap::after{
+.product-img-wrap::after {
   content:'';
   position:absolute;
   inset:0;
-  background:linear-gradient(to top,rgba(0,0,0,0.4),transparent);
+  background:linear-gradient(to top,rgba(0,0,0,0.5),transparent 60%);
   opacity:0;
   transition:0.4s;
 }
 
-.product-card:hover .product-img-wrap::after{
+.product-card:hover .product-img-wrap::after {
   opacity:1;
 }
 
-.product-info{padding:16px;}
-.product-name{font-size:15px;letter-spacing:2px;}
-.product-price{color:var(--accent);font-weight:600;}
-
-.quick-sizes{
+/* QUICK SIZE SELECT (ZARA STYLE) */
+.quick-sizes {
+  position:absolute;
+  bottom:0;
+  width:100%;
   display:flex;
-  gap:6px;
   justify-content:center;
-  padding:10px;
+  gap:6px;
+  padding:12px;
+  background:rgba(0,0,0,0.85);
+  transform:translateY(100%);
+  transition:0.4s;
 }
 
-.quick-sizes span{
-  border:1px solid rgba(255,255,255,0.2);
-  padding:6px 10px;
+.product-card:hover .quick-sizes {
+  transform:translateY(0);
+}
+
+.quick-sizes span {
   font-size:10px;
+  padding:6px 10px;
+  border:1px solid rgba(255,255,255,0.2);
   cursor:pointer;
 }
 
-.quick-sizes span:hover{
-  border-color:var(--accent);
-  color:var(--accent);
+.quick-sizes span:hover {
+  border-color:#c8b99a;
+  color:#c8b99a;
 }
 
+.product-info {
+  padding:16px 14px 20px;
+}
+
+.product-name {
+  font-size:14px;
+  letter-spacing:2px;
+  text-transform:uppercase;
+}
+
+.product-price {
+  font-size:14px;
+  font-weight:600;
+  color:#c8b99a;
+}
+
+/* MOBILE FIX */
 @media(max-width:600px){
-  .products-grid{grid-template-columns:1fr 1fr;}
+  .products-grid{
+    grid-template-columns:1fr 1fr;
+    gap:8px;
+  }
+
+  .product-name{font-size:13px;}
+  .product-price{font-size:13px;}
 }
 </style>
-</head>
-<body>
-
-<div class="products-grid" id="productsGrid"></div>
 
 <script>
-const products=[
-{id:1,name:'Shirt',price:15000,img:'https://via.placeholder.com/300',sizes:['M','L','XL']},
-{id:2,name:'Hoodie',price:30000,img:'https://via.placeholder.com/300',sizes:['L','XL']}
-];
 
-function formatPrice(p){return '₦'+p.toLocaleString();}
-
-function render(){
-const grid=document.getElementById('productsGrid');
-grid.innerHTML=products.map(p=>`
-<div class="product-card">
-<div class="product-img-wrap">
-<img src="${p.img}">
-</div>
-<div class="quick-sizes">
-${p.sizes.map(s=>`<span onclick="add('${p.name}','${s}')">${s}</span>`).join('')}
-</div>
-<div class="product-info">
-<div class="product-name">${p.name}</div>
-<div class="product-price">${formatPrice(p.price)}</div>
-</div>
-</div>`).join('');
+/* SIZE-BASED ADD TO CART */
+function quickAddWithSize(id,size){
+  const p = products.find(x=>x.id===id);
+  addToCart(p,size,1);
 }
 
-function add(name,size){
-alert(`${name} (${size}) added`);
+/* REPLACE RENDER FUNCTION PRODUCT CARD PART */
+function renderProducts(filter='all'){
+  const grid=document.getElementById('productsGrid');
+  const filtered = filter==='all'?products:products.filter(p=>p.category===filter);
+
+  grid.innerHTML = filtered.map(p=>`
+  <div class="product-card">
+    <div class="product-img-wrap">
+      <img src="${p.img}" alt="${p.name}">
+      <div class="quick-sizes">
+        ${p.sizes.map(s=>`<span onclick="quickAddWithSize(${p.id},'${s}')">${s}</span>`).join('')}
+      </div>
+    </div>
+
+    <div class="product-info">
+      <div class="product-name">${p.name}</div>
+      <div class="product-price">₦${p.price.toLocaleString()}</div>
+    </div>
+  </div>
+  `).join('');
 }
 
-render();
+/* IMPROVED CHECKOUT MESSAGE */
+function checkoutWA(){
+  const { summary, total } = buildOrderSummary();
+
+  const msg = `Hello Just Check 👋\n\nI want to place an order:\n\n${summary}\n\nTOTAL: ₦${total.toLocaleString()}\n\nDelivery Location: __________\n\nPlease confirm availability.`;
+
+  window.open(`https://wa.me/2347082448928?text=${encodeURIComponent(msg)}`,'_blank');
+}
+
 </script>
 
-</body>
-</html>
+<!-- NOTES:
+1. Replace ONLY your product card + renderProducts + CSS parts
+2. Keep your existing cart, modal, and data
+3. This gives Zara-style hover + size selection + premium feel
+-->
