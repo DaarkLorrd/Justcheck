@@ -1,270 +1,743 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>JUST CHECK</title>
-
+<title>JUST CHECK — Just Check. Try it on.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
 <style>
-:root{
---black:#0a0a0a;
---white:#f5f5f0;
---accent:#c8b99a;
+:root {
+  --ink: #0c0c0c;
+  --paper: #f7f6f2;
+  --warm: #e8e4dc;
+  --gold: #b8965a;
+  --gold-light: #d4b483;
+  --muted: #8c8c8c;
+  --border: rgba(12,12,12,0.1);
+  --border-dark: rgba(255,255,255,0.1);
+  --font-display: 'Bebas Neue', sans-serif;
+  --font-serif: 'Cormorant Garamond', serif;
+  --font-body: 'DM Sans', sans-serif;
+  --ease: cubic-bezier(0.25,0.46,0.45,0.94);
+  --t: 0.4s var(--ease);
+  --fast: 0.2s ease;
 }
 
-body{
-margin:0;
-background:var(--black);
-color:var(--white);
-font-family:sans-serif;
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;font-size:16px}
+body{background:var(--ink);color:var(--paper);font-family:var(--font-body);font-weight:300;overflow-x:hidden;cursor:none}
+::-webkit-scrollbar{width:2px}
+::-webkit-scrollbar-track{background:var(--ink)}
+::-webkit-scrollbar-thumb{background:var(--gold)}
+img{display:block;max-width:100%}
+button{font-family:var(--font-body)}
+
+/* ── CURSOR ── */
+.cur{width:8px;height:8px;background:var(--paper);border-radius:50%;position:fixed;top:0;left:0;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:width .25s,height .25s,background .25s;mix-blend-mode:difference}
+.cur.big{width:48px;height:48px}
+.cur.dark{background:var(--ink)}
+
+/* ── NAV ── */
+.nav{position:fixed;top:0;left:0;right:0;z-index:800;display:flex;align-items:center;justify-content:space-between;padding:28px 48px;transition:padding var(--t),background var(--t),border-color var(--t);border-bottom:1px solid transparent}
+.nav.stuck{padding:16px 48px;background:rgba(12,12,12,0.96);backdrop-filter:blur(24px);border-color:var(--border-dark)}
+.nav-logo img{height:34px;filter:brightness(0) invert(1);object-fit:contain;transition:transform var(--t)}
+.nav-logo img:hover{transform:scale(1.03)}
+.nav-links{display:flex;gap:40px;list-style:none}
+.nav-links a{color:rgba(247,246,242,0.6);text-decoration:none;font-size:10.5px;letter-spacing:2.5px;text-transform:uppercase;font-weight:400;transition:color var(--fast);position:relative;padding-bottom:2px}
+.nav-links a::after{content:'';position:absolute;bottom:0;left:0;width:0;height:1px;background:var(--gold);transition:width var(--t)}
+.nav-links a:hover{color:var(--paper)}
+.nav-links a:hover::after{width:100%}
+.nav-actions{display:flex;align-items:center;gap:20px}
+.nav-cart{display:flex;align-items:center;gap:8px;background:none;border:1px solid rgba(247,246,242,0.2);color:var(--paper);padding:9px 20px;font-size:10px;letter-spacing:2.5px;text-transform:uppercase;cursor:none;transition:all var(--fast);position:relative}
+.nav-cart:hover{background:var(--paper);color:var(--ink)}
+.cart-badge{position:absolute;top:-7px;right:-7px;width:18px;height:18px;background:var(--gold);color:var(--ink);font-size:9px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:600}
+.ham{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:none;padding:4px}
+.ham span{display:block;width:22px;height:1px;background:var(--paper);transition:var(--fast)}
+
+/* ── MOBILE NAV ── */
+.mob-nav{position:fixed;inset:0;background:var(--ink);z-index:700;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px;opacity:0;pointer-events:none;transition:opacity var(--t)}
+.mob-nav.open{opacity:1;pointer-events:all}
+.mob-nav a{font-family:var(--font-display);font-size:clamp(44px,8vw,72px);letter-spacing:3px;color:var(--paper);text-decoration:none;text-transform:uppercase;transition:color var(--fast);line-height:1}
+.mob-nav a:hover{color:var(--gold)}
+.mob-nav-bottom{position:absolute;bottom:40px;display:flex;gap:28px}
+.mob-nav-bottom a{font-size:10px;letter-spacing:2px;color:var(--muted);text-decoration:none;text-transform:uppercase;transition:color var(--fast)}
+.mob-nav-bottom a:hover{color:var(--gold)}
+
+/* ── HERO ── */
+.hero{min-height:100vh;display:grid;grid-template-columns:1fr 1fr;position:relative;overflow:hidden}
+.hero-left{display:flex;flex-direction:column;justify-content:center;padding:140px 64px 80px;position:relative;z-index:2}
+.hero-eyebrow{font-size:9.5px;letter-spacing:5px;text-transform:uppercase;color:var(--gold);margin-bottom:32px;display:flex;align-items:center;gap:16px}
+.hero-eyebrow::before{content:'';display:block;width:28px;height:1px;background:var(--gold)}
+.hero-h1{font-family:var(--font-display);font-size:clamp(72px,8.5vw,128px);line-height:.88;letter-spacing:3px;text-transform:uppercase}
+.hero-h1 em{font-family:var(--font-serif);font-style:italic;font-size:clamp(42px,5vw,76px);color:var(--gold);display:block;line-height:1.15;letter-spacing:.5px;text-transform:none;margin-top:4px}
+.hero-p{font-size:13px;line-height:1.9;color:rgba(247,246,242,.5);max-width:320px;margin:30px 0 48px;font-weight:300}
+.hero-ctas{display:flex;gap:14px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:10px;padding:14px 36px;font-size:10.5px;letter-spacing:2.5px;text-transform:uppercase;font-weight:400;text-decoration:none;border:none;cursor:none;transition:all var(--t)}
+.btn-solid{background:var(--paper);color:var(--ink);clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,10px 100%,0 calc(100% - 10px))}
+.btn-solid:hover{background:var(--gold);transform:translateY(-2px)}
+.btn-outline{background:transparent;color:var(--paper);border:1px solid rgba(247,246,242,.25)}
+.btn-outline:hover{border-color:var(--gold);color:var(--gold)}
+.hero-scroll{position:absolute;bottom:44px;left:64px;font-size:9px;letter-spacing:4px;text-transform:uppercase;color:rgba(247,246,242,.35);display:flex;align-items:center;gap:14px}
+.scroll-bar{width:36px;height:1px;background:currentColor;animation:sbar 2s ease-in-out infinite}
+@keyframes sbar{0%,100%{width:36px;opacity:1}50%{width:60px;opacity:.3}}
+.hero-right{position:relative;overflow:hidden}
+.hero-collage{position:absolute;inset:0;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:3px;padding:3px}
+.hc-item{overflow:hidden;position:relative}
+.hc-item img{width:100%;height:100%;object-fit:cover;transition:transform .9s var(--ease);background:#1a1a1a}
+.hc-item:hover img{transform:scale(1.06)}
+.hc-item.span2{grid-row:span 2}
+.hc-item::after{content:'';position:absolute;inset:0;background:linear-gradient(to top,rgba(12,12,12,.5) 0%,transparent 50%)}
+.hero-veil{position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,var(--ink) 0%,rgba(12,12,12,.4) 35%,transparent 60%);pointer-events:none}
+.hero-badge{position:absolute;bottom:56px;right:48px;z-index:5;width:88px;height:88px;border-radius:50%;background:var(--gold);color:var(--ink);display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:var(--font-display);font-size:10px;letter-spacing:1.5px;text-align:center;line-height:1.3;animation:spin 14s linear infinite}
+@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+
+/* ── TICKER ── */
+.ticker{padding:13px 0;background:var(--gold);overflow:hidden}
+.ticker-track{display:flex;width:max-content;animation:ticker 24s linear infinite}
+.ticker-item{font-family:var(--font-display);font-size:13px;letter-spacing:3px;text-transform:uppercase;color:var(--ink);padding:0 44px;white-space:nowrap;display:flex;align-items:center;gap:44px}
+.ticker-item::after{content:'✦';font-size:7px}
+@keyframes ticker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* ── SECTION HEADER ── */
+.sec-label{font-size:9.5px;letter-spacing:5px;text-transform:uppercase;color:var(--gold);display:flex;align-items:center;gap:14px;margin-bottom:18px}
+.sec-label::before{content:'';display:block;width:22px;height:1px;background:var(--gold)}
+.sec-title{font-family:var(--font-display);font-size:clamp(42px,5.5vw,80px);line-height:.92;text-transform:uppercase;letter-spacing:2px}
+
+/* ── SHOP ── */
+.shop-section{padding:100px 48px;max-width:1440px;margin:0 auto}
+.shop-top{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:56px;flex-wrap:wrap;gap:20px}
+.filters{display:flex;gap:8px;flex-wrap:wrap}
+.filt{background:none;border:1px solid rgba(247,246,242,.12);color:rgba(247,246,242,.45);padding:9px 22px;font-size:9.5px;letter-spacing:2.5px;text-transform:uppercase;cursor:none;transition:all var(--fast);font-family:var(--font-body)}
+.filt.on,.filt:hover{border-color:var(--gold);color:var(--gold);background:rgba(184,150,90,.07)}
+
+/* ── PRODUCT CARD ── */
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:rgba(247,246,242,.04)}
+.card{background:var(--ink);cursor:none;position:relative;animation:rise .6s var(--ease) both}
+@keyframes rise{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+.card-img{position:relative;overflow:hidden;aspect-ratio:3/4;background:#141414}
+.card-img img{width:100%;height:100%;object-fit:cover;transition:transform .8s var(--ease);filter:brightness(.96)}
+.card:hover .card-img img{transform:scale(1.07);filter:brightness(1)}
+.card-tag{position:absolute;top:16px;left:16px;font-size:8px;letter-spacing:2.5px;text-transform:uppercase;padding:5px 12px;font-weight:500;z-index:3}
+.card-tag.new{background:var(--gold);color:var(--ink)}
+.card-tag.low{background:rgba(12,12,12,.85);color:var(--paper);border:1px solid rgba(247,246,242,.15)}
+/* Quick size panel — slides up on hover */
+.card-quick{position:absolute;bottom:0;left:0;right:0;background:rgba(12,12,12,.92);backdrop-filter:blur(12px);padding:16px;transform:translateY(100%);transition:transform var(--t);z-index:4}
+.card:hover .card-quick{transform:translateY(0)}
+.quick-label{font-size:8px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+.quick-sizes{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.qs{padding:7px 13px;border:1px solid rgba(247,246,242,.2);font-size:9.5px;color:var(--paper);cursor:none;transition:all var(--fast);background:none;font-family:var(--font-body);letter-spacing:.5px}
+.qs:hover,.qs.picked{border-color:var(--gold);color:var(--gold);background:rgba(184,150,90,.1)}
+.quick-add{width:100%;padding:11px;background:var(--paper);color:var(--ink);border:none;font-size:9.5px;letter-spacing:2.5px;text-transform:uppercase;cursor:none;transition:background var(--fast);font-family:var(--font-body)}
+.quick-add:hover{background:var(--gold)}
+.card-body{padding:18px 18px 22px}
+.card-meta{font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.card-name{font-family:var(--font-display);font-size:20px;letter-spacing:1px;text-transform:uppercase;margin-bottom:10px;line-height:1}
+.card-foot{display:flex;justify-content:space-between;align-items:center}
+.card-price{font-size:14px;font-weight:400;color:var(--gold);letter-spacing:.5px}
+.card-sizes-preview{display:flex;gap:3px}
+.csp{width:18px;height:18px;border:1px solid rgba(247,246,242,.15);font-size:6.5px;display:flex;align-items:center;justify-content:center;color:rgba(247,246,242,.3);letter-spacing:0}
+
+/* ── PRODUCT MODAL ── */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:1200;opacity:0;pointer-events:none;transition:opacity var(--t);display:flex;align-items:center;justify-content:center;padding:24px}
+.modal-bg.open{opacity:1;pointer-events:all}
+.modal-box{background:#111;width:100%;max-width:960px;display:grid;grid-template-columns:1.1fr 1fr;max-height:92vh;overflow:hidden;transform:translateY(24px);transition:transform var(--t);position:relative}
+.modal-bg.open .modal-box{transform:translateY(0)}
+.modal-media{position:relative;overflow:hidden;background:#1a1a1a}
+.modal-media img{width:100%;height:100%;object-fit:cover;min-height:520px}
+.modal-x{position:absolute;top:18px;right:18px;width:38px;height:38px;background:rgba(12,12,12,.75);border:1px solid rgba(247,246,242,.15);color:var(--paper);cursor:none;display:flex;align-items:center;justify-content:center;font-size:15px;transition:background var(--fast);z-index:10}
+.modal-x:hover{background:var(--ink)}
+.modal-body{padding:44px 40px;overflow-y:auto;display:flex;flex-direction:column;gap:18px}
+.modal-cat{font-size:9px;letter-spacing:4px;text-transform:uppercase;color:var(--gold)}
+.modal-name{font-family:var(--font-display);font-size:34px;text-transform:uppercase;letter-spacing:1px;line-height:1}
+.modal-price{font-size:24px;font-weight:400;color:var(--gold)}
+.modal-desc{font-size:12px;line-height:1.95;color:rgba(247,246,242,.55);font-weight:300}
+.modal-stock-info{font-size:10px;letter-spacing:1.5px;color:var(--muted);padding:10px 14px;border-left:2px solid var(--gold);background:rgba(184,150,90,.06)}
+.mlabel{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+.modal-sizes{display:flex;gap:8px;flex-wrap:wrap}
+.ms{padding:10px 18px;border:1px solid rgba(247,246,242,.18);font-size:11px;color:var(--paper);cursor:none;transition:all var(--fast);background:none;font-family:var(--font-body)}
+.ms:hover,.ms.on{border-color:var(--gold);color:var(--gold);background:rgba(184,150,90,.08)}
+.ms.sold{opacity:.3;text-decoration:line-through;pointer-events:none}
+.qty-row{display:flex;align-items:center;gap:0;border:1px solid rgba(247,246,242,.18);width:fit-content}
+.qb{width:40px;height:40px;background:none;color:var(--paper);border:none;font-size:18px;cursor:none;transition:background var(--fast)}
+.qb:hover{background:rgba(247,246,242,.08)}
+.qn{width:44px;text-align:center;font-size:14px;background:none;border:none;color:var(--paper);font-family:var(--font-body)}
+.modal-actions{display:flex;flex-direction:column;gap:10px;margin-top:4px}
+.mact{width:100%;padding:14px;border:none;font-family:var(--font-body);font-size:10.5px;letter-spacing:2.5px;text-transform:uppercase;font-weight:500;cursor:none;transition:all var(--fast);display:flex;align-items:center;justify-content:center;gap:10px}
+.mact-bag{background:var(--paper);color:var(--ink)}
+.mact-bag:hover{background:var(--gold)}
+.mact-wa{background:#1fad4e;color:var(--paper)}
+.mact-wa:hover{background:#178c3e}
+.mact-paga{background:#1B3A6B;color:var(--paper)}
+.mact-paga:hover{background:#122a50}
+.modal-divider{height:1px;background:rgba(247,246,242,.08)}
+
+/* ── ABOUT ── */
+.about-section{padding:120px 48px;display:grid;grid-template-columns:1fr 1fr;gap:100px;max-width:1440px;margin:0 auto;align-items:center}
+.about-imgs{position:relative}
+.about-main{width:100%;aspect-ratio:3/4;object-fit:cover;background:#1a1a1a;filter:grayscale(15%)}
+.about-accent{position:absolute;bottom:-36px;right:-36px;width:52%;aspect-ratio:1;object-fit:cover;border:5px solid var(--ink);background:#1a1a1a}
+.about-stat{position:absolute;top:36px;left:-24px;background:var(--gold);color:var(--ink);padding:22px 28px}
+.about-stat-n{font-family:var(--font-display);font-size:40px;line-height:1;display:block}
+.about-stat-l{font-size:8px;letter-spacing:2.5px;text-transform:uppercase;display:block;margin-top:4px}
+.about-text{}
+.about-p{font-size:13px;line-height:2.1;color:rgba(247,246,242,.55);margin:26px 0 42px}
+.about-p strong{color:var(--paper);font-weight:400}
+.about-vals{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:44px}
+.av-n{font-family:var(--font-display);font-size:36px;color:rgba(247,246,242,.07);line-height:1;margin-bottom:8px}
+.av-t{font-size:10px;letter-spacing:2.5px;text-transform:uppercase;color:var(--gold);margin-bottom:6px}
+.av-d{font-size:11.5px;color:var(--muted);line-height:1.7}
+
+/* ── PAYMENT STRIP ── */
+.pay-strip{background:#0e0e0e;border-top:1px solid rgba(247,246,242,.05);border-bottom:1px solid rgba(247,246,242,.05);padding:64px 48px}
+.pay-inner{max-width:1440px;margin:0 auto}
+.pay-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(247,246,242,.06);margin-top:48px}
+.pay-card{background:var(--ink);padding:36px 32px}
+.pay-icon{font-size:32px;margin-bottom:18px;display:block}
+.pay-title{font-family:var(--font-display);font-size:22px;text-transform:uppercase;letter-spacing:1px;margin-bottom:10px}
+.pay-desc{font-size:12px;color:var(--muted);line-height:1.8}
+.pay-val{color:var(--gold);font-size:14px;margin-top:10px;display:block;letter-spacing:.5px}
+
+/* ── CONTACT ── */
+.contact-section{padding:100px 48px;background:#0c0c0c}
+.contact-inner{max-width:1440px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:100px}
+.contact-left .sec-title{margin:18px 0 28px}
+.contact-sub{font-size:13px;color:rgba(247,246,242,.45);line-height:1.9;max-width:360px;margin-bottom:48px}
+.clinks{display:flex;flex-direction:column;gap:12px}
+.clink{display:flex;align-items:center;gap:20px;padding:20px 24px;border:1px solid rgba(247,246,242,.07);background:rgba(247,246,242,.02);text-decoration:none;color:var(--paper);transition:all var(--t)}
+.clink:hover{border-color:rgba(184,150,90,.4);transform:translateX(6px)}
+.clink-ico{width:42px;height:42px;border:1px solid rgba(247,246,242,.12);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;transition:border-color var(--fast)}
+.clink:hover .clink-ico{border-color:var(--gold)}
+.clink-lbl{font-size:8.5px;letter-spacing:3px;color:var(--muted);text-transform:uppercase;margin-bottom:3px}
+.clink-val{font-size:14px}
+.soc-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:44px}
+.soc-card{padding:32px 26px;border:1px solid rgba(247,246,242,.07);text-decoration:none;color:var(--paper);display:flex;flex-direction:column;gap:12px;transition:all var(--t);background:rgba(247,246,242,.02)}
+.soc-card:hover{border-color:rgba(184,150,90,.4)}
+.soc-ico{font-size:26px}
+.soc-name{font-family:var(--font-display);font-size:24px;text-transform:uppercase}
+.soc-handle{font-size:11px;color:var(--muted)}
+.soc-cta{margin-top:auto;font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:var(--gold)}
+
+/* ── CART DRAWER ── */
+.cart-veil{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:900;opacity:0;pointer-events:none;transition:opacity var(--t)}
+.cart-veil.open{opacity:1;pointer-events:all}
+.cart-drawer{position:fixed;right:0;top:0;bottom:0;width:420px;background:#111;border-left:1px solid rgba(247,246,242,.07);z-index:1000;transform:translateX(100%);transition:transform var(--t);display:flex;flex-direction:column}
+.cart-drawer.open{transform:translateX(0)}
+.cart-head{display:flex;justify-content:space-between;align-items:center;padding:28px 28px 24px;border-bottom:1px solid rgba(247,246,242,.07)}
+.cart-head-title{font-family:var(--font-display);font-size:26px;letter-spacing:2px;text-transform:uppercase}
+.cart-head-count{font-size:10px;color:var(--muted);letter-spacing:2px}
+.cart-xbtn{background:none;border:none;color:var(--paper);font-size:18px;cursor:none;transition:color var(--fast)}
+.cart-xbtn:hover{color:var(--gold)}
+.cart-scroll{flex:1;overflow-y:auto;padding:20px 28px;display:flex;flex-direction:column;gap:20px}
+.cart-scroll::-webkit-scrollbar{width:2px}
+.cart-scroll::-webkit-scrollbar-thumb{background:rgba(247,246,242,.1)}
+.cart-empty-state{text-align:center;padding:80px 0}
+.cart-empty-ico{font-size:44px;display:block;margin-bottom:16px;opacity:.4}
+.cart-empty-txt{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--muted)}
+.cart-line{display:grid;grid-template-columns:76px 1fr;gap:16px;padding-bottom:20px;border-bottom:1px solid rgba(247,246,242,.06)}
+.cart-line-img{width:76px;height:96px;object-fit:cover;background:#1a1a1a}
+.cart-line-n{font-family:var(--font-display);font-size:15px;text-transform:uppercase;margin-bottom:4px;letter-spacing:.5px}
+.cart-line-m{font-size:10px;color:var(--muted);margin-bottom:8px;letter-spacing:.5px}
+.cart-line-bot{display:flex;align-items:center;justify-content:space-between}
+.cart-line-p{font-size:13px;color:var(--gold)}
+.cart-line-rm{background:none;border:none;color:rgba(247,246,242,.25);font-size:9px;letter-spacing:1.5px;text-transform:uppercase;cursor:none;transition:color var(--fast);font-family:var(--font-body)}
+.cart-line-rm:hover{color:var(--paper)}
+.cart-foot{padding:20px 28px 32px;border-top:1px solid rgba(247,246,242,.07)}
+.cart-total-row{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px}
+.cart-total-lbl{font-size:9.5px;letter-spacing:3px;text-transform:uppercase;color:var(--muted)}
+.cart-total-amt{font-family:var(--font-display);font-size:30px;color:var(--gold)}
+.cart-note{font-size:10px;color:var(--muted);margin-bottom:20px;letter-spacing:.5px}
+.cart-btns{display:flex;flex-direction:column;gap:8px}
+.cbtn{width:100%;padding:15px;border:none;font-family:var(--font-body);font-size:10.5px;letter-spacing:2.5px;text-transform:uppercase;font-weight:500;cursor:none;transition:all var(--fast);display:flex;align-items:center;justify-content:center;gap:10px}
+.cbtn-wa{background:#1fad4e;color:#fff}
+.cbtn-wa:hover{background:#178c3e}
+.cbtn-paga{background:#1B3A6B;color:#fff}
+.cbtn-paga:hover{background:#122a50}
+
+/* ── FOOTER ── */
+footer{background:var(--ink);border-top:1px solid rgba(247,246,242,.05);padding:64px 48px 32px}
+.foot-top{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:48px;max-width:1440px;margin:0 auto 56px}
+.foot-brand-logo{height:32px;filter:brightness(0) invert(1);object-fit:contain;margin-bottom:20px;display:block}
+.foot-brand-p{font-size:12px;color:var(--muted);line-height:1.9;max-width:260px}
+.foot-col-h{font-size:8.5px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:20px}
+.foot-links{list-style:none;display:flex;flex-direction:column;gap:12px}
+.foot-links a{color:var(--muted);text-decoration:none;font-size:12px;transition:color var(--fast)}
+.foot-links a:hover{color:var(--paper)}
+.foot-bot{border-top:1px solid rgba(247,246,242,.05);padding-top:28px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;max-width:1440px;margin:0 auto}
+.foot-copy{font-size:10.5px;color:rgba(247,246,242,.25);letter-spacing:.5px}
+.foot-soc{display:flex;gap:20px}
+.foot-soc a{color:rgba(247,246,242,.3);text-decoration:none;font-size:10px;letter-spacing:2.5px;text-transform:uppercase;transition:color var(--fast)}
+.foot-soc a:hover{color:var(--gold)}
+
+/* ── WA FLOAT ── */
+.wa-float{position:fixed;bottom:32px;right:32px;z-index:850;display:flex;align-items:center;gap:12px}
+.wa-tip{background:rgba(12,12,12,.9);color:var(--paper);padding:9px 18px;font-size:10.5px;letter-spacing:.5px;opacity:0;transform:translateX(8px);transition:all var(--t);pointer-events:none;border:1px solid rgba(247,246,242,.08);white-space:nowrap}
+.wa-float:hover .wa-tip{opacity:1;transform:translateX(0)}
+.wa-btn{width:58px;height:58px;background:#25D366;border-radius:50%;display:flex;align-items:center;justify-content:center;text-decoration:none;font-size:26px;box-shadow:0 4px 24px rgba(37,211,102,.35);animation:wap 2.8s ease-in-out infinite}
+@keyframes wap{0%,100%{box-shadow:0 4px 24px rgba(37,211,102,.35)}50%{box-shadow:0 4px 44px rgba(37,211,102,.65)}}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:108px;left:50%;transform:translateX(-50%) translateY(16px);background:var(--paper);color:var(--ink);padding:13px 30px;font-size:10.5px;letter-spacing:2px;text-transform:uppercase;font-weight:500;opacity:0;transition:all .4s ease;z-index:2000;pointer-events:none;white-space:nowrap}
+.toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ── RESPONSIVE ── */
+@media(max-width:1200px){
+  .grid{grid-template-columns:repeat(3,1fr)}
+  .about-section{grid-template-columns:1fr;gap:70px}
+  .pay-grid{grid-template-columns:1fr 1fr}
 }
-
-/* NAV */
-nav{
-padding:20px;
-display:flex;
-justify-content:space-between;
+@media(max-width:960px){
+  .nav{padding:20px 28px}
+  .nav.stuck{padding:14px 28px}
+  .nav-links{display:none}
+  .ham{display:flex}
+  .hero{grid-template-columns:1fr;min-height:100svh}
+  .hero-left{padding:120px 28px 64px}
+  .hero-right{height:55vw;min-height:280px}
+  .hero-scroll{left:28px}
+  .hero-badge{right:28px;bottom:20px;width:72px;height:72px;font-size:8.5px}
+  .grid{grid-template-columns:repeat(2,1fr)}
+  .shop-section{padding:64px 24px}
+  .about-section{padding:80px 24px}
+  .about-accent{display:none}
+  .contact-inner{grid-template-columns:1fr;gap:56px}
+  .contact-section{padding:80px 24px}
+  .pay-strip{padding:64px 24px}
+  .foot-top{grid-template-columns:1fr 1fr}
+  footer{padding:56px 24px 28px}
+  .cart-drawer{width:100%}
+  .modal-box{grid-template-columns:1fr;max-height:95svh}
+  .modal-media{max-height:45vh}
+  .modal-media img{min-height:auto}
+  .modal-body{padding:28px 24px}
 }
-
-button{cursor:pointer}
-
-/* GRID */
-.products-grid{
-display:grid;
-grid-template-columns:repeat(4,1fr);
-gap:12px;
-padding:40px;
-}
-
-/* CARD */
-.product-card{
-position:relative;
-background:#0d0d0d;
-overflow:hidden;
-transition:0.4s;
-}
-
-.product-card:hover{
-transform:translateY(-8px);
-box-shadow:0 30px 60px rgba(0,0,0,0.6);
-}
-
-/* IMAGE */
-.product-img-wrap{
-position:relative;
-aspect-ratio:3/4;
-overflow:hidden;
-}
-
-.product-img-wrap img{
-width:100%;
-height:100%;
-object-fit:cover;
-transition:0.8s;
-}
-
-.product-card:hover img{
-transform:scale(1.08);
-}
-
-/* SIZE SELECT */
-.quick-sizes{
-position:absolute;
-bottom:0;
-width:100%;
-display:flex;
-justify-content:center;
-gap:6px;
-padding:12px;
-background:rgba(0,0,0,0.85);
-transform:translateY(100%);
-transition:0.4s;
-}
-
-.product-card:hover .quick-sizes{
-transform:translateY(0);
-}
-
-.quick-sizes span{
-font-size:10px;
-padding:6px 10px;
-border:1px solid rgba(255,255,255,0.2);
-}
-
-.quick-sizes span:hover{
-border-color:var(--accent);
-color:var(--accent);
-}
-
-/* INFO */
-.product-info{padding:16px;}
-.product-name{font-size:14px;letter-spacing:2px;text-transform:uppercase;}
-.product-price{color:var(--accent);}
-
-/* CART */
-.cart{
-position:fixed;
-right:0;
-top:0;
-width:300px;
-height:100%;
-background:#111;
-padding:20px;
-transform:translateX(100%);
-transition:0.3s;
-}
-
-.cart.open{transform:translateX(0);}
-
-/* MODAL */
-.modal{
-position:fixed;
-inset:0;
-background:rgba(0,0,0,0.9);
-display:none;
-justify-content:center;
-align-items:center;
-}
-
-.modal.open{display:flex;}
-
-.modal-box{
-background:#111;
-padding:20px;
-max-width:400px;
-}
-
-/* MOBILE */
-@media(max-width:600px){
-.products-grid{
-grid-template-columns:1fr 1fr;
-padding:20px;
-}
+@media(max-width:640px){
+  .grid{grid-template-columns:repeat(2,1fr);gap:0;background:transparent}
+  .card{border-bottom:1px solid rgba(247,246,242,.04)}
+  .hero-h1{font-size:clamp(56px,14vw,88px)}
+  .hero-right{height:70vw}
+  .soc-grid{grid-template-columns:1fr}
+  .foot-top{grid-template-columns:1fr}
+  .foot-bot{flex-direction:column;text-align:center}
+  .pay-grid{grid-template-columns:1fr}
+  .filters{gap:6px}
+  .filt{padding:7px 14px;font-size:8.5px}
+  /* On mobile show quick panel differently */
+  .card-quick{transform:none;position:static;background:rgba(247,246,242,.04);border-top:1px solid rgba(247,246,242,.06)}
+  .card:hover .card-quick{transform:none}
 }
 </style>
-
 </head>
-
 <body>
 
-<nav>
-<h3>JUST CHECK</h3>
-<button onclick="toggleCart()">Cart (<span id="count">0</span>)</button>
+<div class="cur" id="cur"></div>
+
+<!-- NAV -->
+<nav class="nav" id="nav">
+  <a href="#home" class="nav-logo"><img src="https://i.imgur.com/pHnkue2.jpeg" alt="Just Check"></a>
+  <ul class="nav-links">
+    <li><a href="#home">Home</a></li>
+    <li><a href="#shop">Shop</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <div class="nav-actions">
+    <button class="nav-cart" onclick="toggleCart()">Bag <span class="cart-badge" id="cartBadge">0</span></button>
+    <button class="ham" id="ham" onclick="toggleMob()"><span></span><span></span><span></span></button>
+  </div>
 </nav>
 
-<div class="products-grid" id="grid"></div>
-
-<!-- CART -->
-
-<div class="cart" id="cart">
-<h3>Your Cart</h3>
-<div id="cartItems"></div>
-<button onclick="checkout()">Checkout (WhatsApp)</button>
+<!-- MOBILE NAV -->
+<div class="mob-nav" id="mobNav">
+  <a href="#home" onclick="toggleMob()">Home</a>
+  <a href="#shop" onclick="toggleMob()">Shop</a>
+  <a href="#about" onclick="toggleMob()">About</a>
+  <a href="#contact" onclick="toggleMob()">Contact</a>
+  <div class="mob-nav-bottom">
+    <a href="https://www.instagram.com/justcheckclothing.co" target="_blank">Instagram</a>
+    <a href="https://www.tiktok.com/@justcheckclothing.co" target="_blank">TikTok</a>
+    <a href="https://wa.me/2347082448928" target="_blank">WhatsApp</a>
+  </div>
 </div>
 
-<!-- MODAL -->
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-left">
+    <div class="hero-eyebrow">New Collection 2025</div>
+    <h1 class="hero-h1">Just Check.<em>Try it on.</em></h1>
+    <p class="hero-p">Streetwear built for the bold. Premium cuts, raw confidence — designed for those who lead the culture, not follow it.</p>
+    <div class="hero-ctas">
+      <a href="#shop" class="btn btn-solid">Shop Now →</a>
+      <a href="#shop" class="btn btn-outline">View Collection</a>
+    </div>
+    <div class="hero-scroll"><div class="scroll-bar"></div>Scroll</div>
+  </div>
+  <div class="hero-right">
+    <div class="hero-collage">
+      <div class="hc-item span2"><img src="Just_Check_Hoodie__Blue.jpg" alt="Just Check Hoodie"></div>
+      <div class="hc-item"><img src="Just_Check_Shirt_Black.jpg" alt="Just Check Shirt"></div>
+      <div class="hc-item"><img src="Just_Check_Sweatshirt_Navy_Blue.jpg" alt="Just Check Sweatshirt"></div>
+    </div>
+    <div class="hero-veil"></div>
+    <div class="hero-badge">NEW<br>DROP<br>2025</div>
+  </div>
+</section>
 
-<div class="modal" id="modal" onclick="closeModal(event)">
-<div class="modal-box">
-<h3 id="mName"></h3>
-<p id="mPrice"></p>
-<div id="mSizes"></div>
-<button onclick="addFromModal()">Add to Cart</button>
+<!-- TICKER -->
+<div class="ticker">
+  <div class="ticker-track">
+    <div class="ticker-item">Just Check</div><div class="ticker-item">Shirts</div><div class="ticker-item">Shorts</div><div class="ticker-item">Sweatshirts</div><div class="ticker-item">Hoodies</div><div class="ticker-item">Lagos Worldwide</div><div class="ticker-item">Try It On</div>
+    <div class="ticker-item">Just Check</div><div class="ticker-item">Shirts</div><div class="ticker-item">Shorts</div><div class="ticker-item">Sweatshirts</div><div class="ticker-item">Hoodies</div><div class="ticker-item">Lagos Worldwide</div><div class="ticker-item">Try It On</div>
+  </div>
 </div>
+
+<!-- SHOP -->
+<section id="shop" class="shop-section">
+  <div class="shop-top">
+    <div>
+      <div class="sec-label">The Collection</div>
+      <h2 class="sec-title">All Pieces</h2>
+    </div>
+    <div class="filters">
+      <button class="filt on" onclick="filter('all',this)">All</button>
+      <button class="filt" onclick="filter('shirt',this)">Shirts</button>
+      <button class="filt" onclick="filter('short',this)">Shorts</button>
+      <button class="filt" onclick="filter('sweatshirt',this)">Sweatshirts</button>
+      <button class="filt" onclick="filter('hoodie',this)">Hoodies</button>
+    </div>
+  </div>
+  <div class="grid" id="grid"></div>
+</section>
+
+<!-- ABOUT -->
+<section id="about" class="about-section">
+  <div class="about-imgs">
+    <img class="about-main" src="Just_Check_Sweatshirt_Green.jpg" alt="Just Check">
+    <img class="about-accent" src="Just_Check_Short_Coffee.jpg" alt="">
+    <div class="about-stat"><span class="about-stat-n">16+</span><span class="about-stat-l">Styles Live</span></div>
+  </div>
+  <div class="about-text">
+    <div class="sec-label">Our Story</div>
+    <h2 class="sec-title">Born From<br>The Streets</h2>
+    <p class="about-p"><strong>Just Check</strong> was born in the heart of Lagos — where style is survival and every outfit tells a story. We didn't wait for permission to be bold. We created it.<br><br>Our pieces are designed for the ones who <strong>walk into any room and own it</strong>. For the dreamers who hustle. The creatives who move different. The culture-shapers who refuse to blend in.</p>
+    <div class="about-vals">
+      <div><div class="av-n">01</div><div class="av-t">Premium Quality</div><div class="av-d">Every stitch crafted for those who expect more.</div></div>
+      <div><div class="av-n">02</div><div class="av-t">Street Culture</div><div class="av-d">Rooted in Lagos. Made for the world.</div></div>
+      <div><div class="av-n">03</div><div class="av-t">Bold Design</div><div class="av-d">Minimal in form, loud in presence.</div></div>
+      <div><div class="av-n">04</div><div class="av-t">Limited Stock</div><div class="av-d">Exclusive always. Never mass-produced.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- PAYMENT -->
+<div class="pay-strip">
+  <div class="pay-inner">
+    <div class="sec-label">How to Order</div>
+    <h2 class="sec-title">Payment & Delivery</h2>
+    <div class="pay-grid">
+      <div class="pay-card"><span class="pay-icon">💬</span><div class="pay-title">WhatsApp Order</div><div class="pay-desc">Add items to your bag and checkout via WhatsApp. We confirm and send payment details instantly.<span class="pay-val">+234 708 244 8928</span></div></div>
+      <div class="pay-card"><span class="pay-icon">💳</span><div class="pay-title">Paga Payment</div><div class="pay-desc">Pay securely via Paga. Send payment then send proof to our WhatsApp to confirm your order.<span class="pay-val">Paga: 1581866786</span></div></div>
+      <div class="pay-card"><span class="pay-icon">🚚</span><div class="pay-title">Nationwide Delivery</div><div class="pay-desc">We deliver across Lagos and all of Nigeria. Delivery fee confirmed on WhatsApp after order.<span class="pay-val">Lagos & Nationwide</span></div></div>
+    </div>
+  </div>
 </div>
+
+<!-- CONTACT -->
+<section id="contact" class="contact-section">
+  <div class="contact-inner">
+    <div class="contact-left">
+      <div class="sec-label">Get In Touch</div>
+      <h2 class="sec-title">Let's<br>Connect</h2>
+      <p class="contact-sub">Questions about sizing, stock, or delivery? Hit us up — we respond fast every day.</p>
+      <div class="clinks">
+        <a href="https://wa.me/2347082448928" target="_blank" class="clink"><div class="clink-ico">💬</div><div><div class="clink-lbl">WhatsApp</div><div class="clink-val">+234 708 244 8928</div></div></a>
+        <a href="https://www.instagram.com/justcheckclothing.co" target="_blank" class="clink"><div class="clink-ico">📸</div><div><div class="clink-lbl">Instagram</div><div class="clink-val">@justcheckclothing.co</div></div></a>
+        <a href="https://www.tiktok.com/@justcheckclothing.co" target="_blank" class="clink"><div class="clink-ico">🎵</div><div><div class="clink-lbl">TikTok</div><div class="clink-val">@justcheckclothing.co</div></div></a>
+        <div class="clink"><div class="clink-ico">💳</div><div><div class="clink-lbl">Paga</div><div class="clink-val">1581866786</div></div></div>
+      </div>
+    </div>
+    <div>
+      <div class="sec-label">Follow the Drop</div>
+      <h3 class="sec-title" style="font-size:clamp(34px,4vw,58px)">Stay in<br>the Loop</h3>
+      <div class="soc-grid">
+        <a href="https://www.instagram.com/justcheckclothing.co" target="_blank" class="soc-card"><div class="soc-ico">📸</div><div class="soc-name">Instagram</div><div class="soc-handle">@justcheckclothing.co</div><div class="soc-cta">Follow Now →</div></a>
+        <a href="https://www.tiktok.com/@justcheckclothing.co" target="_blank" class="soc-card"><div class="soc-ico">🎵</div><div class="soc-name">TikTok</div><div class="soc-handle">@justcheckclothing.co</div><div class="soc-cta">Follow Now →</div></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="foot-top">
+    <div><img class="foot-brand-logo" src="https://i.imgur.com/pHnkue2.jpeg" alt="Just Check"><p class="foot-brand-p">Premium streetwear from Lagos to the world. Just Check. Try it on.</p></div>
+    <div><div class="foot-col-h">Navigate</div><ul class="foot-links"><li><a href="#home">Home</a></li><li><a href="#shop">Shop</a></li><li><a href="#about">About</a></li><li><a href="#contact">Contact</a></li></ul></div>
+    <div><div class="foot-col-h">Info</div><ul class="foot-links"><li><a href="#">Sizing Guide</a></li><li><a href="#">Shipping</a></li><li><a href="#">Returns</a></li><li><a href="#">FAQ</a></li></ul></div>
+    <div><div class="foot-col-h">Contact</div><ul class="foot-links"><li><a href="https://wa.me/2347082448928" target="_blank">WhatsApp</a></li><li><a href="#">Paga: 1581866786</a></li><li><a href="https://www.instagram.com/justcheckclothing.co" target="_blank">Instagram</a></li><li><a href="https://www.tiktok.com/@justcheckclothing.co" target="_blank">TikTok</a></li></ul></div>
+  </div>
+  <div class="foot-bot">
+    <div class="foot-copy">© 2025 Just Check Clothing Co. Lagos, Nigeria.</div>
+    <div class="foot-soc"><a href="https://www.instagram.com/justcheckclothing.co" target="_blank">IG</a><a href="https://www.tiktok.com/@justcheckclothing.co" target="_blank">TK</a><a href="https://wa.me/2347082448928" target="_blank">WA</a></div>
+  </div>
+</footer>
+
+<!-- WA FLOAT -->
+<div class="wa-float"><div class="wa-tip">Order on WhatsApp</div><a href="https://wa.me/2347082448928" target="_blank" class="wa-btn">💬</a></div>
+
+<!-- CART DRAWER -->
+<div class="cart-veil" id="cartVeil" onclick="toggleCart()"></div>
+<div class="cart-drawer" id="cartDrawer">
+  <div class="cart-head">
+    <div><div class="cart-head-title">Your Bag</div><div class="cart-head-count" id="cartHeadCount">0 items</div></div>
+    <button class="cart-xbtn" onclick="toggleCart()">✕</button>
+  </div>
+  <div class="cart-scroll" id="cartScroll"></div>
+  <div class="cart-foot" id="cartFoot" style="display:none">
+    <div class="cart-total-row"><span class="cart-total-lbl">Total</span><span class="cart-total-amt" id="cartAmt">₦0</span></div>
+    <div class="cart-note">Delivery fee confirmed via WhatsApp after order.</div>
+    <div class="cart-btns">
+      <button class="cbtn cbtn-wa" onclick="checkoutWA()">💬 Order via WhatsApp</button>
+      <button class="cbtn cbtn-paga" onclick="checkoutPaga()">💳 Pay via Paga · 1581866786</button>
+    </div>
+  </div>
+</div>
+
+<!-- PRODUCT MODAL -->
+<div class="modal-bg" id="modalBg" onclick="closeModalOutside(event)">
+  <div class="modal-box">
+    <div class="modal-media">
+      <img id="mImg" src="" alt="">
+      <button class="modal-x" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-cat" id="mCat"></div>
+      <div class="modal-name" id="mName"></div>
+      <div class="modal-price" id="mPrice"></div>
+      <p class="modal-desc" id="mDesc"></p>
+      <div class="modal-stock-info" id="mStock"></div>
+      <div class="modal-divider"></div>
+      <div>
+        <div class="mlabel">Select Size</div>
+        <div class="modal-sizes" id="mSizes"></div>
+      </div>
+      <div>
+        <div class="mlabel">Quantity</div>
+        <div class="qty-row"><button class="qb" onclick="adjQty(-1)">−</button><input class="qn" id="qtyVal" value="1" readonly><button class="qb" onclick="adjQty(1)">+</button></div>
+      </div>
+      <div class="modal-actions">
+        <button class="mact mact-bag" onclick="addFromModal()">Add to Bag</button>
+        <button class="mact mact-wa" onclick="buyWA()">💬 Buy Now — WhatsApp</button>
+        <button class="mact mact-paga" onclick="buyPaga()">💳 Pay via Paga</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
 
 <script>
+// CURSOR
+const cur = document.getElementById('cur');
+document.addEventListener('mousemove', e => { cur.style.left=e.clientX+'px'; cur.style.top=e.clientY+'px'; });
+document.querySelectorAll('a,button,.card,.clink,.soc-card').forEach(el => {
+  el.addEventListener('mouseenter', () => cur.classList.add('big'));
+  el.addEventListener('mouseleave', () => cur.classList.remove('big'));
+});
 
-/* DATA */
-const products=[
-{id:1,name:'Shirt',price:15000,img:'Just_Check_Shirt_Black.jpg',sizes:['M','L','XL'],category:'shirt'},
-{id:2,name:'Hoodie',price:30000,img:'Just_Check_Hoodie__Blue.jpg',sizes:['L','XL'],category:'hoodie'}
+// NAV
+window.addEventListener('scroll', () => document.getElementById('nav').classList.toggle('stuck', scrollY > 60));
+
+// MOBILE NAV
+function toggleMob() {
+  const mn = document.getElementById('mobNav');
+  mn.classList.toggle('open');
+  document.body.style.overflow = mn.classList.contains('open') ? 'hidden' : '';
+}
+
+// PRODUCTS
+const CAT = { shirt:'Shirt', short:'Short', sweatshirt:'Sweatshirt', hoodie:'Hoodie' };
+const products = [
+  {id:1,  name:'Just Check Shirt',       color:'Black',     cat:'shirt',      price:15000, img:'Just_Check_Shirt_Black.jpg',         sizes:['M','L','XL'], stock:3, desc:'Heavyweight 240gsm cotton tee with the iconic Just Check embroidered chest patch. Drop shoulder, clean cut, built to last.'},
+  {id:2,  name:'Just Check Shirt',       color:'Navy Blue', cat:'shirt',      price:15000, img:'Just_Check_Shirt_Navy_Blue.jpg',      sizes:['M','L','XL'], stock:3, desc:'Heavyweight 240gsm cotton tee with the iconic Just Check embroidered chest patch. Drop shoulder, clean cut, built to last.'},
+  {id:3,  name:'Just Check Shirt',       color:'Green',     cat:'shirt',      price:15000, img:'Just_Check_Shirt_Green.jpg',          sizes:['M','L','XL'], stock:3, desc:'Heavyweight 240gsm cotton tee with the iconic Just Check embroidered chest patch. Drop shoulder, clean cut, built to last.'},
+  {id:4,  name:'Just Check Shirt',       color:'Blue',      cat:'shirt',      price:15000, img:'Just_Check_Shirt_Blue.jpg',           sizes:['M','L','XL'], stock:3, desc:'Heavyweight 240gsm cotton tee with the iconic Just Check embroidered chest patch. Drop shoulder, clean cut, built to last.'},
+  {id:5,  name:'Just Check Short',       color:'Navy Blue', cat:'short',      price:20000, img:'Just_Check_Short_Navy_Blue.jpg',      sizes:['M','L','XL'], stock:3, desc:'Washed 380gsm fleece shorts. Drawstring waist, deep side pockets, Just Check woven label at hem. The essential streetwear bottom.'},
+  {id:6,  name:'Just Check Short',       color:'Grey',      cat:'short',      price:20000, img:'Just_Check_Short_Grey.jpg',           sizes:['M','L','XL'], stock:3, desc:'Washed 380gsm fleece shorts. Drawstring waist, deep side pockets, Just Check woven label at hem. The essential streetwear bottom.'},
+  {id:7,  name:'Just Check Short',       color:'Dark Grey', cat:'short',      price:20000, img:'Just_Check_Short_Dark_Grey.jpg',      sizes:['M','L','XL'], stock:3, desc:'Washed 380gsm fleece shorts. Drawstring waist, deep side pockets, Just Check woven label at hem. The essential streetwear bottom.'},
+  {id:8,  name:'Just Check Short',       color:'Coffee',    cat:'short',      price:20000, img:'Just_Check_Short_Coffee.jpg',         sizes:['M','L','XL'], stock:3, desc:'Washed 380gsm fleece shorts. Drawstring waist, deep side pockets, Just Check woven label at hem. The essential streetwear bottom.'},
+  {id:9,  name:'Just Check Sweatshirt',  color:'Green',     cat:'sweatshirt', price:25000, img:'Just_Check_Sweatshirt_Green.jpg',     sizes:['M','L'],      stock:2, desc:'400gsm brushed fleece crewneck. Boxy dropped-shoulder fit, ribbed cuffs, embroidered chest badge. The cornerstone piece.'},
+  {id:10, name:'Just Check Sweatshirt',  color:'Pink',      cat:'sweatshirt', price:25000, img:'Just_Check_Sweatshirt_Pink.jpg',      sizes:['L','XL'],     stock:2, desc:'400gsm brushed fleece crewneck. Boxy dropped-shoulder fit, ribbed cuffs, embroidered chest badge. The cornerstone piece.'},
+  {id:11, name:'Just Check Sweatshirt',  color:'Black',     cat:'sweatshirt', price:25000, img:'Just_Check_Sweatshirt_Black.jpg',     sizes:['M','L','XL'], stock:3, desc:'400gsm brushed fleece crewneck. Boxy dropped-shoulder fit, ribbed cuffs, embroidered chest badge. The cornerstone piece.'},
+  {id:12, name:'Just Check Sweatshirt',  color:'White',     cat:'sweatshirt', price:25000, img:'Just_Check_Sweatshirt_White.jpg',     sizes:['L','XL'],     stock:2, desc:'400gsm brushed fleece crewneck. Boxy dropped-shoulder fit, ribbed cuffs, embroidered chest badge. The cornerstone piece.'},
+  {id:13, name:'Just Check Sweatshirt',  color:'Navy Blue', cat:'sweatshirt', price:25000, img:'Just_Check_Sweatshirt_Navy_Blue.jpg', sizes:['M','L','XL'], stock:3, desc:'400gsm brushed fleece crewneck. Boxy dropped-shoulder fit, ribbed cuffs, embroidered chest badge. The cornerstone piece.'},
+  {id:14, name:'Just Check Sweatshirt',  color:'Grey',      cat:'sweatshirt', price:25000, img:'Just_Check_Sweatshirt_Grey.jpg',      sizes:['M','L','XL'], stock:3, desc:'400gsm brushed fleece crewneck. Boxy dropped-shoulder fit, ribbed cuffs, embroidered chest badge. The cornerstone piece.'},
+  {id:15, name:'Just Check Hoodie',      color:'Blue',      cat:'hoodie',     price:30000, img:'Just_Check_Hoodie__Blue.jpg',         sizes:['L','XL'],     stock:2, desc:'Premium 420gsm hoodie with kangaroo pocket and embroidered chest logo. Oversized hood, ribbed cuffs and hem. Built for the culture.'},
+  {id:16, name:'Just Check Hoodie',      color:'Wine',      cat:'hoodie',     price:30000, img:'Just_Check_Hoodie_Wine.jpg',          sizes:['M','L'],      stock:2, desc:'Premium 420gsm hoodie with kangaroo pocket and embroidered chest logo. Oversized hood, ribbed cuffs and hem. Built for the culture.'},
 ];
 
-let cart=[];
-let currentProduct=null;
-let selectedSize='';
+const fp = n => '₦' + n.toLocaleString();
+let cart = [], curProd = null, curSize = '', curQty = 1;
 
-/* FORMAT */
-function ₦(p){return '₦'+p.toLocaleString();}
+// Selected sizes per card (for quick-add on mobile)
+const cardSizes = {};
 
-/* RENDER */
-function render(){
-document.getElementById('grid').innerHTML=products.map(p=>`
-<div class="product-card">
-<div class="product-img-wrap">
-<img src="${p.img}">
-<div class="quick-sizes">
-${p.sizes.map(s=>`<span onclick="addQuick(${p.id},'${s}')">${s}</span>`).join('')}
-</div>
-</div>
-<div class="product-info">
-<div class="product-name">${p.name}</div>
-<div class="product-price">${₦(p.price)}</div>
-<button onclick="openModal(${p.id})">View</button>
-</div>
-</div>
-`).join('');
+function renderGrid(f='all') {
+  const list = f==='all' ? products : products.filter(p=>p.cat===f);
+  document.getElementById('grid').innerHTML = list.map((p,i) => `
+    <div class="card" style="animation-delay:${i*.045}s" data-id="${p.id}">
+      <div class="card-img">
+        <img src="${p.img}" alt="${p.name} ${p.color}" loading="lazy">
+        ${p.stock<=2?'<div class="card-tag low">Only '+p.stock+' left</div>':''}
+        <div class="card-quick">
+          <div class="quick-label">Select Size</div>
+          <div class="quick-sizes">
+            ${p.sizes.map((s,si)=>`<button class="qs${si===0?' picked':''}" onclick="pickSize(event,${p.id},'${s}',this)">${s}</button>`).join('')}
+          </div>
+          <button class="quick-add" onclick="quickAdd(event,${p.id})">Add to Bag</button>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="card-meta">${CAT[p.cat]} · ${p.color}</div>
+        <div class="card-name">${p.name}</div>
+        <div class="card-foot">
+          <div class="card-price">${fp(p.price)}</div>
+          <div class="card-sizes-preview">${p.sizes.map(s=>`<div class="csp">${s}</div>`).join('')}</div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+  // init selected sizes
+  list.forEach(p => { cardSizes[p.id] = p.sizes[0]; });
+  // click card body → open modal
+  document.querySelectorAll('.card-body').forEach(el => {
+    el.addEventListener('click', () => openModal(+el.closest('.card').dataset.id));
+  });
+  document.querySelectorAll('.card-img').forEach(el => {
+    el.addEventListener('click', e => {
+      if (!e.target.closest('.card-quick')) openModal(+el.closest('.card').dataset.id);
+    });
+  });
 }
 
-/* QUICK ADD */
-function addQuick(id,size){
-const p=products.find(x=>x.id===id);
-cart.push({p,size});
-updateCart();
+function filter(f, btn) {
+  document.querySelectorAll('.filt').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  renderGrid(f);
 }
 
-/* MODAL */
-function openModal(id){
-const p=products.find(x=>x.id===id);
-currentProduct=p;
-selectedSize=p.sizes[0];
-
-document.getElementById('modal').classList.add('open');
-document.getElementById('mName').innerText=p.name;
-document.getElementById('mPrice').innerText=₦(p.price);
-
-document.getElementById('mSizes').innerHTML=
-p.sizes.map(s=>`<button onclick="selectSize('${s}')">${s}</button>`).join('');
+function pickSize(e, id, size, btn) {
+  e.stopPropagation();
+  cardSizes[id] = size;
+  btn.closest('.quick-sizes').querySelectorAll('.qs').forEach(b=>b.classList.remove('picked'));
+  btn.classList.add('picked');
 }
 
-function closeModal(e){
-if(e.target.id==='modal') document.getElementById('modal').classList.remove('open');
+function quickAdd(e, id) {
+  e.stopPropagation();
+  const p = products.find(x=>x.id===id);
+  const size = cardSizes[id] || p.sizes[0];
+  addToCart(p, size, 1);
 }
 
-function selectSize(s){selectedSize=s;}
+// MODAL
+function openModal(id) {
+  const p = products.find(x=>x.id===id);
+  curProd = p; curQty = 1; curSize = p.sizes[0];
+  document.getElementById('mImg').src = p.img;
+  document.getElementById('mCat').textContent = `${CAT[p.cat]} · ${p.color}`;
+  document.getElementById('mName').textContent = p.name;
+  document.getElementById('mPrice').textContent = fp(p.price);
+  document.getElementById('mDesc').textContent = p.desc;
+  document.getElementById('mStock').textContent = `${p.stock} unit${p.stock!==1?'s':''} remaining — order soon`;
+  document.getElementById('qtyVal').value = 1;
+  document.getElementById('mSizes').innerHTML = p.sizes.map(s =>
+    `<button class="ms${s===curSize?' on':''}" onclick="pickModalSize(this,'${s}')">${s}</button>`
+  ).join('');
+  document.getElementById('modalBg').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function pickModalSize(btn, s) {
+  document.querySelectorAll('.ms').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on'); curSize = s;
+}
+function adjQty(d) { curQty = Math.max(1,curQty+d); document.getElementById('qtyVal').value=curQty; }
+function closeModal() { document.getElementById('modalBg').classList.remove('open'); document.body.style.overflow=''; }
+function closeModalOutside(e) { if(e.target===document.getElementById('modalBg')) closeModal(); }
 
-function addFromModal(){
-cart.push({p:currentProduct,size:selectedSize});
-updateCart();
-document.getElementById('modal').classList.remove('open');
+function addFromModal() {
+  if(!curProd||!curSize) return;
+  addToCart(curProd,curSize,curQty); closeModal();
+}
+function buyWA() {
+  if(!curProd) return;
+  const msg=`Hi! I want to buy:\n*${curProd.name} — ${curProd.color}*\nSize: ${curSize} · Qty: ${curQty}\nTotal: ${fp(curProd.price*curQty)}\n\nPlease confirm my order!`;
+  window.open(`https://wa.me/2347082448928?text=${encodeURIComponent(msg)}`, '_blank');
+}
+function buyPaga() {
+  if(!curProd) return;
+  const msg=`Hi! I just paid via Paga (1581866786) for:\n*${curProd.name} — ${curProd.color}*\nSize: ${curSize} · Qty: ${curQty}\nAmount: ${fp(curProd.price*curQty)}\n\nPlease confirm!`;
+  window.open(`https://wa.me/2347082448928?text=${encodeURIComponent(msg)}`, '_blank');
 }
 
-/* CART */
-function updateCart(){
-document.getElementById('count').innerText=cart.length;
-document.getElementById('cartItems').innerHTML=
-cart.map(i=>`<p>${i.p.name} (${i.size})</p>`).join('');
+// CART
+function addToCart(p, size, qty) {
+  const key=`${p.id}-${size}`;
+  const ex=cart.find(i=>i.key===key);
+  if(ex) ex.qty+=qty; else cart.push({key,product:p,size,qty});
+  updateCart(); toast(`${p.color} ${CAT[p.cat]} — ${size} added ✓`);
+}
+function removeFromCart(key) { cart=cart.filter(i=>i.key!==key); updateCart(); }
+function updateCart() {
+  const total=cart.reduce((s,i)=>s+i.product.price*i.qty,0);
+  const count=cart.reduce((s,i)=>s+i.qty,0);
+  document.getElementById('cartBadge').textContent=count;
+  document.getElementById('cartHeadCount').textContent=`${count} item${count!==1?'s':''}`;
+  const scroll=document.getElementById('cartScroll');
+  const foot=document.getElementById('cartFoot');
+  if(!cart.length){
+    scroll.innerHTML=`<div class="cart-empty-state"><span class="cart-empty-ico">🛍</span><div class="cart-empty-txt">Your bag is empty</div></div>`;
+    foot.style.display='none';
+  } else {
+    scroll.innerHTML=cart.map(i=>`
+      <div class="cart-line">
+        <img class="cart-line-img" src="${i.product.img}" alt="${i.product.name}">
+        <div>
+          <div class="cart-line-n">${i.product.name}</div>
+          <div class="cart-line-m">${i.product.color} · ${i.size} · Qty ${i.qty}</div>
+          <div class="cart-line-bot">
+            <div class="cart-line-p">${fp(i.product.price*i.qty)}</div>
+            <button class="cart-line-rm" onclick="removeFromCart('${i.key}')">Remove</button>
+          </div>
+        </div>
+      </div>`).join('');
+    foot.style.display='block';
+    document.getElementById('cartAmt').textContent=fp(total);
+  }
+}
+function toggleCart() {
+  const open=document.getElementById('cartDrawer').classList.toggle('open');
+  document.getElementById('cartVeil').classList.toggle('open',open);
+  document.body.style.overflow=open?'hidden':'';
+}
+function checkoutWA() {
+  const summary=cart.map(i=>`• ${i.product.name} ${i.product.color} (${i.size} ×${i.qty}) — ${fp(i.product.price*i.qty)}`).join('\n');
+  const total=cart.reduce((s,i)=>s+i.product.price*i.qty,0);
+  window.open(`https://wa.me/2347082448928?text=${encodeURIComponent(`Hi Just Check! I'd like to order:\n\n${summary}\n\n*Total: ${fp(total)}*\n\nPlease confirm and send payment details!`)}`, '_blank');
+}
+function checkoutPaga() {
+  const summary=cart.map(i=>`• ${i.product.name} ${i.product.color} (${i.size} ×${i.qty}) — ${fp(i.product.price*i.qty)}`).join('\n');
+  const total=cart.reduce((s,i)=>s+i.product.price*i.qty,0);
+  window.open(`https://wa.me/2347082448928?text=${encodeURIComponent(`Hi! I just paid via Paga (1581866786).\n\nOrder:\n${summary}\n\n*Total: ${fp(total)}*\n\nPlease confirm my order!`)}`, '_blank');
 }
 
-function toggleCart(){
-document.getElementById('cart').classList.toggle('open');
+// TOAST
+function toast(msg) {
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('on');
+  clearTimeout(t._t); t._t=setTimeout(()=>t.classList.remove('on'),2600);
 }
 
-/* CHECKOUT */
-function checkout(){
-let msg='Hello Just Check 👋\n\nOrder:\n';
-cart.forEach(i=>{
-msg+=`${i.p.name} (${i.size}) - ${₦(i.p.price)}\n`;
-});
-window.open(`https://wa.me/2347082448928?text=${encodeURIComponent(msg)}`);
-}
-
-/* INIT */
-render();
-
+renderGrid(); updateCart();
 </script>
-
 </body>
 </html>
