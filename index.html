@@ -4,13 +4,23 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>JUST CHECK — Just Check. Try it on.</title>
-<!-- Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
-<script>
-  window.dataLayer=window.dataLayer||[];
-  function gtag(){dataLayer.push(arguments)}
-  gtag('js',new Date());
-  gtag('config','G-XXXXXXXXXX');
+<!-- Firebase SDK -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-analytics.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDPmwywk5LBDnaiKdPqM4tRlOdCBxLka_U",
+    authDomain: "just-check-954cc.firebaseapp.com",
+    projectId: "just-check-954cc",
+    storageBucket: "just-check-954cc.firebasestorage.app",
+    messagingSenderId: "588494308176",
+    appId: "1:588494308176:web:82590b0e2d768d7b646255",
+    measurementId: "G-HEPYBVVW0C"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const analytics = getAnalytics(app);
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
@@ -765,7 +775,6 @@ function openModal(id){
   document.getElementById('modalBg').classList.add('open');
   document.body.style.overflow='hidden';
 
-  // show sticky bag on mobile
   if(isMobile()){
     sbSize=p.sizes[0];
     document.getElementById('sbName').textContent=p.name;
@@ -782,7 +791,6 @@ function pickMS(btn,s){
   if(btn.disabled)return;
   document.querySelectorAll('.ms').forEach(b=>b.classList.remove('on'));
   btn.classList.add('on'); curSize=s;
-  // sync sticky
   document.querySelectorAll('.sbs').forEach(b=>{b.classList.toggle('on',b.textContent===s)});
   sbSize=s;
 }
@@ -900,9 +908,6 @@ function showToast(msg){
   t.textContent=msg; t.classList.add('on');
   clearTimeout(t._t); t._t=setTimeout(()=>t.classList.remove('on'),2800);
 }
-
-// GOOGLE ANALYTICS EVENTS
-function trackEvent(name,params){if(typeof gtag!=='undefined')gtag('event',name,params)}
 
 renderGrid(); updateCart();
 </script>
