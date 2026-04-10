@@ -1088,18 +1088,44 @@ function closeConfirm(){
   document.body.style.overflow='';
 }
 
+// SEND ORDER NOTIFICATION TO MAKE.COM WEBHOOK
+async function notifyWebhook(items, total, method, ref, customerName, customerEmail) {
+  try {
+    await fetch('https://hook.eu1.make.com/jdrmnfc8fdhmk4xhkcuhxnhkbc7k6c8t', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        ref: ref,
+        name: customerName || 'Guest',
+        email: customerEmail || 'Not signed in',
+        method: method,
+        total: total,
+        items: items.map(i => `${i.name} ${i.color} — Size ${i.size} x${i.qty} — ₦${(i.price*i.qty).toLocaleString()}`).join('\n'),
+        timestamp: new Date().toLocaleString('en-NG', {timeZone:'Africa/Lagos'})
+      })
+    });
+  } catch(e) { console.error('Webhook error:', e); }
+}
+
 async function checkoutWA(){
+  const items = cart.map(i=>({name:i.product.name,color:i.product.color,size:i.size,qty:i.qty,price:i.product.price}));
   const s=cart.map(i=>`• ${i.product.name} ${i.product.color} (${i.size} ×${i.qty}) — ${fp(i.product.price*i.qty)}`).join('\n');
   const t=cart.reduce((a,i)=>a+i.product.price*i.qty,0);
   let ref=document.getElementById('confirmRef').textContent.replace('Order Reference: ','');
-  if(window.saveOrder) ref=await window.saveOrder(cart.map(i=>({name:i.product.name,color:i.product.color,size:i.size,qty:i.qty,price:i.product.price})),t,'WhatsApp')||ref;
+  const user = typeof auth !== 'undefined' ? auth.currentUser : null;
+  if(window.saveOrder) ref=await window.saveOrder(items,t,'WhatsApp')||ref;
+  await notifyWebhook(items,t,'WhatsApp',ref,user?.displayName,user?.email);
   window.open(`https://wa.me/2347082448928?text=${encodeURIComponent(`Hi Just Check! I'd like to order:\n\n${s}\n\n*Total: ${fp(t)}*\nRef: ${ref}\n\nPlease confirm!`)}`,'_blank');
 }
+
 async function checkoutPaga(){
+  const items = cart.map(i=>({name:i.product.name,color:i.product.color,size:i.size,qty:i.qty,price:i.product.price}));
   const s=cart.map(i=>`• ${i.product.name} ${i.product.color} (${i.size} ×${i.qty}) — ${fp(i.product.price*i.qty)}`).join('\n');
   const t=cart.reduce((a,i)=>a+i.product.price*i.qty,0);
   let ref=document.getElementById('confirmRef').textContent.replace('Order Reference: ','');
-  if(window.saveOrder) ref=await window.saveOrder(cart.map(i=>({name:i.product.name,color:i.product.color,size:i.size,qty:i.qty,price:i.product.price})),t,'Paga')||ref;
+  const user = typeof auth !== 'undefined' ? auth.currentUser : null;
+  if(window.saveOrder) ref=await window.saveOrder(items,t,'Paga')||ref;
+  await notifyWebhook(items,t,'Paga',ref,user?.displayName,user?.email);
   window.open(`https://wa.me/2347082448928?text=${encodeURIComponent(`Hi! I paid via Paga (1581866786).\n\nOrder:\n${s}\n\n*Total: ${fp(t)}*\nRef: ${ref}\n\nPlease confirm!`)}`,'_blank');
 }
 
