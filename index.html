@@ -884,7 +884,7 @@ const products=[
   {id:12,name:'Just Check Sweatshirt', color:'Green',     cat:'sweatshirt', price:25000, img:'https://i.postimg.cc/CL9775Tn/Just-Check-Sw-eatshirt-Green.jpg',       sizes:['M','L'],      stock:2, desc:'400gsm brushed fleece crewneck. Boxy dropped-shoulder fit, ribbed cuffs, embroidered chest badge.'},
   {id:13,name:'Just Check Sweatshirt', color:'Grey',      cat:'sweatshirt', price:25000, img:'https://i.postimg.cc/mrsw-xnr4/Just-Check-Sw-eatshirt-Grey.jpg',       sizes:['M','L','XL'], stock:3, desc:'400gsm brushed fleece crewneck. Boxy dropped-shoulder fit, ribbed cuffs, embroidered chest badge.'},
   {id:14,name:'Just Check Sweatshirt', color:'Navy Blue', cat:'sweatshirt', price:25000, img:'https://i.postimg.cc/8zWH0GTQ/Just-Check-Sw-eatshirt-Navy-Blue.jpg',   sizes:['M','L','XL'], stock:3, desc:'400gsm brushed fleece crewneck. Boxy dropped-shoulder fit, ribbed cuffs, embroidered chest badge.'},
-  {id:15,name:'Just Check Sweatshirt', color:'Pink',      cat:'sweatshirt', price:25000, img:'https://i.postimg.cc/HLg2GNLg/Just-Check-Sw-eatshirt-Pink.jpg',        sizes:['L','XL'],     stock:0, desc:'400gsm brushed fleece crewneck. Boxy dropped-shoulder fit, ribbed cuffs, embroidered chest badge.'},
+  {id:15,name:'Just Check Sweatshirt', color:'Pink',      cat:'sweatshirt', price:25000, img:'https://i.postimg.cc/HLg2GNLg/Just-Check-Sw-eatshirt-Pink.jpg',        sizes:['L','XL'],     stock:2, desc:'400gsm brushed fleece crewneck. Boxy dropped-shoulder fit, ribbed cuffs, embroidered chest badge.'},
   {id:16,name:'Just Check Sweatshirt', color:'White',     cat:'sweatshirt', price:25000, img:'https://i.postimg.cc/R0BRrY04/Just-Check-Sw-eatshirt-White.jpg',       sizes:['L','XL'],     stock:2, desc:'400gsm brushed fleece crewneck. Boxy dropped-shoulder fit, ribbed cuffs, embroidered chest badge.'},
   {id:17,name:'Just Check Hoodie',     color:'Black',     cat:'hoodie',     price:30000, img:'https://i.postimg.cc/MTzdBLk9/Just-Check-Hoodie-Black.jpg',             sizes:['M','L','XL'], stock:4, desc:'Premium 420gsm hoodie with kangaroo pocket and embroidered chest logo. Oversized hood, ribbed cuffs.'},
   {id:18,name:'Just Check Hoodie',     color:'Blue',      cat:'hoodie',     price:30000, img:'https://i.postimg.cc/LXmNPWdY/Just-Check-Hoodie-Blue.jpg',              sizes:['L','XL'],     stock:2, desc:'Premium 420gsm hoodie with kangaroo pocket and embroidered chest logo. Oversized hood, ribbed cuffs.'},
@@ -906,7 +906,7 @@ function renderGrid(f='all'){
     const soldOut=p.stock===0;
     return `
     <div class="card" style="animation-delay:${i*.04}s" data-id="${p.id}">
-      <div class="card-img">
+      <div class="card-img" onclick="${soldOut?'':'openModal('+p.id+')'}" style="${soldOut?'':'cursor:pointer'}">
         <img src="${p.img}" alt="${p.name} ${p.color}" loading="lazy">
         ${soldOut?`<div class="card-tag sold">Sold Out</div>`:p.stock<=2?`<div class="card-tag low">Only ${p.stock} left</div>`:''}
         ${!soldOut?`<div class="card-quick">
