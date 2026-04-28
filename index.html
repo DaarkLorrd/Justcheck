@@ -206,8 +206,10 @@ img{display:block;max-width:100%}button{font-family:var(--fb)}
 .card{background:var(--ink);position:relative;animation:rise .6s var(--ease) both}
 @keyframes rise{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
 .card-img{position:relative;overflow:hidden;aspect-ratio:3/4;background:#141414}
-.card-img img{width:100%;height:100%;object-fit:cover;transition:transform .8s var(--ease)}
-.card:hover .card-img img{transform:scale(1.07)}
+.card-img img.primary{width:100%;height:100%;object-fit:cover;transition:opacity .6s ease,transform .8s var(--ease);position:absolute;inset:0;z-index:2}
+.card-img img.lifestyle{width:100%;height:100%;object-fit:cover;transition:opacity .6s ease,transform .8s var(--ease);position:absolute;inset:0;z-index:1;opacity:0}
+.card:hover .card-img img.primary{opacity:0;transform:scale(1.04)}
+.card:hover .card-img img.lifestyle{opacity:1;transform:scale(1.07)}
 .card-tag{position:absolute;top:16px;left:16px;font-size:8px;letter-spacing:2.5px;text-transform:uppercase;padding:5px 12px;font-weight:500;z-index:3}
 .card-tag.low{background:rgba(12,12,12,.85);color:var(--paper);border:1px solid rgba(247,246,242,.15)}
 .card-tag.sold{background:var(--red);color:#fff}
@@ -479,8 +481,22 @@ footer{background:var(--ink);border-top:1px solid rgba(247,246,242,.05);padding:
 .user-signout{width:100%;padding:13px;background:none;border:1px solid rgba(247,246,242,.15);color:rgba(247,246,242,.5);font-family:var(--fb);font-size:10px;letter-spacing:2.5px;text-transform:uppercase;transition:all var(--fast)}
 .user-signout:hover{border-color:var(--red,#c0392b);color:var(--red,#c0392b)}
 
+/* LOOKBOOK */
+.lookbook-sec{padding:0;background:var(--ink);overflow:hidden}
+.lookbook-header{padding:64px 48px 40px;max-width:1440px;margin:0 auto;display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:16px}
+.lookbook-grid{display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:auto;gap:3px}
+.lb-item{overflow:hidden;position:relative;cursor:pointer}
+.lb-item img{width:100%;height:100%;object-fit:cover;transition:transform .8s var(--ease);display:block}
+.lb-item:hover img{transform:scale(1.05)}
+.lb-item.tall{grid-row:span 2}
+.lb-item.wide{grid-column:span 2}
+.lb-overlay{position:absolute;inset:0;background:rgba(12,12,12,0);transition:background var(--t);display:flex;align-items:flex-end;padding:20px}
+.lb-item:hover .lb-overlay{background:rgba(12,12,12,.5)}
+.lb-tag{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--paper);opacity:0;transform:translateY(8px);transition:all var(--t)}
+.lb-item:hover .lb-tag{opacity:1;transform:translateY(0)}
+
 /* RESPONSIVE */
-@media(max-width:1200px){.grid{grid-template-columns:repeat(3,1fr)}.about-sec{grid-template-columns:1fr;gap:70px}.pay-grid{grid-template-columns:1fr 1fr}.reviews-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:1200px){.grid{grid-template-columns:repeat(3,1fr)}.about-sec{grid-template-columns:1fr;gap:70px}.pay-grid{grid-template-columns:1fr 1fr}.reviews-grid{grid-template-columns:1fr 1fr}.lookbook-grid{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:960px){
   .nav{padding:20px 28px}.nav.stuck{padding:14px 28px}
   .nav-links{display:none}.nav-size-guide{display:none}.ham{display:flex}
@@ -494,6 +510,8 @@ footer{background:var(--ink);border-top:1px solid rgba(247,246,242,.05);padding:
   .pay-strip{padding:64px 24px}.foot-top{grid-template-columns:1fr 1fr}
   footer{padding:56px 24px 28px}.cart-drawer{width:100%}
   .reviews-sec{padding:60px 24px}.reviews-grid{grid-template-columns:1fr}
+  .lookbook-grid{grid-template-columns:repeat(2,1fr)}.lookbook-header{padding:48px 24px 32px}
+  .lb-item.tall{grid-row:span 1}.lb-item.wide{grid-column:span 1}
   .sg-box{padding:32px 24px}.confirm-box{padding:36px 24px}
 }
 @media(max-width:640px){
@@ -555,9 +573,9 @@ footer{background:var(--ink);border-top:1px solid rgba(247,246,242,.05);padding:
   </div>
   <div class="hero-right">
     <div class="hero-collage">
-      <div class="hc-item span2"><img src="https://i.postimg.cc/LXmNPWdY/Just-Check-Hoodie-Blue.jpg" alt="Just Check Hoodie Blue"></div>
-      <div class="hc-item"><img src="https://i.postimg.cc/3R99FZ7f/Just-Check-Shirt-Black.jpg" alt="Just Check Shirt Black"></div>
-      <div class="hc-item"><img src="https://i.postimg.cc/8zWH0GTQ/Just-Check-Sw-eatshirt-Navy-Blue.jpg" alt="Just Check Sweatshirt"></div>
+      <div class="hc-item span2"><img src="https://i.postimg.cc/p9b1LR40/IMG-0275.jpg" alt="Just Check Look"></div>
+      <div class="hc-item"><img src="https://i.postimg.cc/yg7Q0nVg/IMG-0291.jpg" alt="Just Check Style"></div>
+      <div class="hc-item"><img src="https://i.postimg.cc/3y5bxYz5/IMG-0279.jpg" alt="Just Check Vibes"></div>
     </div>
     <div class="hero-veil"></div>
     <div class="hero-badge">NEW<br>DROP<br>2025</div>
@@ -589,6 +607,67 @@ footer{background:var(--ink);border-top:1px solid rgba(247,246,242,.05);padding:
   </div>
   <div class="grid" id="grid"></div>
 </section>
+
+<!-- LOOKBOOK -->
+<div class="lookbook-sec">
+  <div class="lookbook-header">
+    <div>
+      <div class="sec-label">The Look</div>
+      <h2 class="sec-title">Worn in the Wild</h2>
+    </div>
+    <a href="#shop" class="btn btn-outline" style="padding:10px 28px;font-size:9.5px">Shop the Look →</a>
+  </div>
+  <div class="lookbook-grid">
+    <div class="lb-item tall" onclick="document.getElementById('shop').scrollIntoView({behavior:'smooth'})">
+      <img src="https://i.postimg.cc/p9b1LR40/IMG-0275.jpg" alt="Just Check Look">
+      <div class="lb-overlay"><span class="lb-tag">Navy Blue Hoodie</span></div>
+    </div>
+    <div class="lb-item" onclick="document.getElementById('shop').scrollIntoView({behavior:'smooth'})">
+      <img src="https://i.postimg.cc/3y5bxYz5/IMG-0279.jpg" alt="Just Check Look">
+      <div class="lb-overlay"><span class="lb-tag">Navy Blue Hoodie</span></div>
+    </div>
+    <div class="lb-item" onclick="document.getElementById('shop').scrollIntoView({behavior:'smooth'})">
+      <img src="https://i.postimg.cc/QBQYBvZ4/IMG-0282.jpg" alt="Just Check Look">
+      <div class="lb-overlay"><span class="lb-tag">Shop the Look</span></div>
+    </div>
+    <div class="lb-item tall" onclick="document.getElementById('shop').scrollIntoView({behavior:'smooth'})">
+      <img src="https://i.postimg.cc/yg7Q0nVg/IMG-0291.jpg" alt="Just Check Look">
+      <div class="lb-overlay"><span class="lb-tag">Black Sweatshirt</span></div>
+    </div>
+    <div class="lb-item" onclick="document.getElementById('shop').scrollIntoView({behavior:'smooth'})">
+      <img src="https://i.postimg.cc/mcf6gBJN/IMG-0267.jpg" alt="Just Check Look">
+      <div class="lb-overlay"><span class="lb-tag">Green Sweatshirt</span></div>
+    </div>
+    <div class="lb-item wide" onclick="document.getElementById('shop').scrollIntoView({behavior:'smooth'})">
+      <img src="https://i.postimg.cc/z37m2b61/IMG-0139.avif" alt="Just Check Look">
+      <div class="lb-overlay"><span class="lb-tag">Black Hoodie</span></div>
+    </div>
+    <div class="lb-item" onclick="document.getElementById('shop').scrollIntoView({behavior:'smooth'})">
+      <img src="https://i.postimg.cc/TLcssFk9/IMG-0142.avif" alt="Just Check Look">
+      <div class="lb-overlay"><span class="lb-tag">Black Hoodie</span></div>
+    </div>
+    <div class="lb-item" onclick="document.getElementById('shop').scrollIntoView({behavior:'smooth'})">
+      <img src="https://i.postimg.cc/QB1wQH1J/IMG-0288.avif" alt="Just Check Look">
+      <div class="lb-overlay"><span class="lb-tag">Navy Blue Hoodie</span></div>
+    </div>
+    <div class="lb-item" onclick="document.getElementById('shop').scrollIntoView({behavior:'smooth'})">
+      <img src="https://i.postimg.cc/ct4zGh2G/IMG-0289.avif" alt="Just Check Look">
+      <div class="lb-overlay"><span class="lb-tag">Navy Blue Hoodie</span></div>
+    </div>
+    <div class="lb-item" onclick="document.getElementById('shop').scrollIntoView({behavior:'smooth'})">
+      <img src="https://i.postimg.cc/MXWNBZTm/IMG-0290.avif" alt="Just Check Look">
+      <div class="lb-overlay"><span class="lb-tag">Navy Blue Hoodie</span></div>
+    </div>
+    <div class="lb-item" onclick="document.getElementById('shop').scrollIntoView({behavior:'smooth'})">
+      <img src="https://i.postimg.cc/yWv5yq3d/IMG-0292.avif" alt="Just Check Look">
+      <div class="lb-overlay"><span class="lb-tag">Shop the Look</span></div>
+    </div>
+    <div class="lb-item" onclick="document.getElementById('shop').scrollIntoView({behavior:'smooth'})">
+      <img src="https://i.postimg.cc/N5nzZ14w/IMG-0293.avif" alt="Just Check Look">
+      <div class="lb-overlay"><span class="lb-tag">Shop the Look</span></div>
+    </div>
+  </div>
+</div>
 
 <!-- REVIEWS -->
 <div class="reviews-sec">
@@ -900,14 +979,32 @@ const cardSizes={};
 
 function isMobile(){return window.innerWidth<=960}
 
+// Lifestyle images mapped to product categories
+const lifestyleImgs = {
+  sweatshirt: ['https://i.postimg.cc/yg7Q0nVg/IMG-0291.jpg','https://i.postimg.cc/mcf6gBJN/IMG-0267.jpg'],
+  hoodie: ['https://i.postimg.cc/z37m2b61/IMG-0139.avif','https://i.postimg.cc/TLcssFk9/IMG-0142.avif','https://i.postimg.cc/QB1wQH1J/IMG-0288.avif','https://i.postimg.cc/ct4zGh2G/IMG-0289.avif','https://i.postimg.cc/MXWNBZTm/IMG-0290.avif','https://i.postimg.cc/p9b1LR40/IMG-0275.jpg','https://i.postimg.cc/3y5bxYz5/IMG-0279.jpg'],
+  shirt: ['https://i.postimg.cc/QBQYBvZ4/IMG-0282.jpg','https://i.postimg.cc/yWv5yq3d/IMG-0292.avif'],
+  short: ['https://i.postimg.cc/N5nzZ14w/IMG-0293.avif','https://i.postimg.cc/18NjSfCy/IMG-0294.avif']
+};
+let lifestyleIdx = {sweatshirt:0,hoodie:0,shirt:0,short:0};
+
+function getLifestyleImg(cat) {
+  const imgs = lifestyleImgs[cat] || lifestyleImgs.hoodie;
+  const idx = lifestyleIdx[cat] || 0;
+  lifestyleIdx[cat] = (idx + 1) % imgs.length;
+  return imgs[idx];
+}
+
 function renderGrid(f='all'){
+  lifestyleIdx = {sweatshirt:0,hoodie:0,shirt:0,short:0};
   const list=f==='all'?products:products.filter(p=>p.cat===f);
   document.getElementById('grid').innerHTML=list.map((p,i)=>{
     const soldOut=p.stock===0;
     return `
     <div class="card" style="animation-delay:${i*.04}s" data-id="${p.id}">
       <div class="card-img" onclick="${soldOut?'':'openModal('+p.id+')'}" style="${soldOut?'':'cursor:pointer'}">
-        <img src="${p.img}" alt="${p.name} ${p.color}" loading="lazy">
+        <img class="lifestyle" src="${getLifestyleImg(p.cat)}" alt="${p.name} worn" loading="lazy">
+        <img class="primary" src="${p.img}" alt="${p.name} ${p.color}" loading="lazy">
         ${soldOut?`<div class="card-tag sold">Sold Out</div>`:p.stock<=2?`<div class="card-tag low">Only ${p.stock} left</div>`:''}
         ${!soldOut?`<div class="card-quick">
           <div class="quick-label">Select Size to Add</div>
