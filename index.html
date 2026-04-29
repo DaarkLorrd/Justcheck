@@ -207,8 +207,9 @@ img{display:block;max-width:100%}button{font-family:var(--fb)}
 @keyframes rise{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
 .card-img{position:relative;overflow:hidden;aspect-ratio:3/4;background:#141414}
 .card-img img.primary{width:100%;height:100%;object-fit:cover;transition:opacity .6s ease,transform .8s var(--ease);position:absolute;inset:0;z-index:2}
+.card-img img.primary.solo{z-index:1}
 .card-img img.lifestyle{width:100%;height:100%;object-fit:cover;transition:opacity .6s ease,transform .8s var(--ease);position:absolute;inset:0;z-index:1;opacity:0}
-.card:hover .card-img img.primary{opacity:0;transform:scale(1.04)}
+.card:hover .card-img img.primary:not(.solo){opacity:0;transform:scale(1.04)}
 .card:hover .card-img img.lifestyle{opacity:1;transform:scale(1.07)}
 .card-tag{position:absolute;top:16px;left:16px;font-size:8px;letter-spacing:2.5px;text-transform:uppercase;padding:5px 12px;font-weight:500;z-index:3}
 .card-tag.low{background:rgba(12,12,12,.85);color:var(--paper);border:1px solid rgba(247,246,242,.15)}
@@ -618,53 +619,61 @@ footer{background:var(--ink);border-top:1px solid rgba(247,246,242,.05);padding:
     <a href="#shop" class="btn btn-outline" style="padding:10px 28px;font-size:9.5px">Shop the Look →</a>
   </div>
   <div class="lookbook-grid">
-    <div class="lb-item tall" onclick="document.getElementById('shop').scrollIntoView({behavior:'smooth'})">
-      <img src="https://i.postimg.cc/p9b1LR40/IMG-0275.jpg" alt="Just Check Look">
+    <!-- Black Hoodie -->
+    <div class="lb-item tall" onclick="doFilter('hoodie',document.querySelector('.filt'));document.getElementById('shop').scrollIntoView({behavior:'smooth'})">
+      <img src="https://i.postimg.cc/QB1wQH1J/IMG-0288.avif" alt="Black Hoodie">
+      <div class="lb-overlay"><span class="lb-tag">Black Hoodie — Shop Now</span></div>
+    </div>
+    <div class="lb-item" onclick="doFilter('hoodie',document.querySelector('.filt'));document.getElementById('shop').scrollIntoView({behavior:'smooth'})">
+      <img src="https://i.postimg.cc/ct4zGh2G/IMG-0289.avif" alt="Black Hoodie">
+      <div class="lb-overlay"><span class="lb-tag">Black Hoodie</span></div>
+    </div>
+    <div class="lb-item" onclick="doFilter('hoodie',document.querySelector('.filt'));document.getElementById('shop').scrollIntoView({behavior:'smooth'})">
+      <img src="https://i.postimg.cc/MXWNBZTm/IMG-0290.avif" alt="Black Hoodie">
+      <div class="lb-overlay"><span class="lb-tag">Black Hoodie</span></div>
+    </div>
+    <!-- Navy Blue Hoodie -->
+    <div class="lb-item tall" onclick="doFilter('hoodie',document.querySelector('.filt'));document.getElementById('shop').scrollIntoView({behavior:'smooth'})">
+      <img src="https://i.postimg.cc/yWv5yq3d/IMG-0292.avif" alt="Navy Blue Hoodie">
+      <div class="lb-overlay"><span class="lb-tag">Navy Blue Hoodie — Shop Now</span></div>
+    </div>
+    <div class="lb-item" onclick="doFilter('hoodie',document.querySelector('.filt'));document.getElementById('shop').scrollIntoView({behavior:'smooth'})">
+      <img src="https://i.postimg.cc/N5nzZ14w/IMG-0293.avif" alt="Navy Blue Hoodie">
       <div class="lb-overlay"><span class="lb-tag">Navy Blue Hoodie</span></div>
     </div>
-    <div class="lb-item" onclick="document.getElementById('shop').scrollIntoView({behavior:'smooth'})">
-      <img src="https://i.postimg.cc/3y5bxYz5/IMG-0279.jpg" alt="Just Check Look">
+    <div class="lb-item" onclick="doFilter('hoodie',document.querySelector('.filt'));document.getElementById('shop').scrollIntoView({behavior:'smooth'})">
+      <img src="https://i.postimg.cc/18NjSfCy/IMG-0294.avif" alt="Navy Blue Hoodie">
       <div class="lb-overlay"><span class="lb-tag">Navy Blue Hoodie</span></div>
     </div>
-    <div class="lb-item" onclick="document.getElementById('shop').scrollIntoView({behavior:'smooth'})">
-      <img src="https://i.postimg.cc/QBQYBvZ4/IMG-0282.jpg" alt="Just Check Look">
-      <div class="lb-overlay"><span class="lb-tag">Shop the Look</span></div>
+    <div class="lb-item" onclick="doFilter('hoodie',document.querySelector('.filt'));document.getElementById('shop').scrollIntoView({behavior:'smooth'})">
+      <img src="https://i.postimg.cc/mPF54tXR/IMG-0295.avif" alt="Navy Blue Hoodie">
+      <div class="lb-overlay"><span class="lb-tag">Navy Blue Hoodie</span></div>
     </div>
-    <div class="lb-item tall" onclick="document.getElementById('shop').scrollIntoView({behavior:'smooth'})">
-      <img src="https://i.postimg.cc/yg7Q0nVg/IMG-0291.jpg" alt="Just Check Look">
-      <div class="lb-overlay"><span class="lb-tag">Black Sweatshirt</span></div>
+    <div class="lb-item" onclick="doFilter('hoodie',document.querySelector('.filt'));document.getElementById('shop').scrollIntoView({behavior:'smooth'})">
+      <img src="https://i.postimg.cc/kV3hgqzh/IMG-0296.avif" alt="Navy Blue Hoodie">
+      <div class="lb-overlay"><span class="lb-tag">Navy Blue Hoodie</span></div>
     </div>
-    <div class="lb-item" onclick="document.getElementById('shop').scrollIntoView({behavior:'smooth'})">
-      <img src="https://i.postimg.cc/mcf6gBJN/IMG-0267.jpg" alt="Just Check Look">
+    <div class="lb-item wide" onclick="doFilter('hoodie',document.querySelector('.filt'));document.getElementById('shop').scrollIntoView({behavior:'smooth'})">
+      <img src="https://i.postimg.cc/9R1xbT05/IMG-0297.avif" alt="Navy Blue Hoodie">
+      <div class="lb-overlay"><span class="lb-tag">Navy Blue Hoodie</span></div>
+    </div>
+    <!-- Navy Blue Sweatshirt -->
+    <div class="lb-item" onclick="doFilter('sweatshirt',document.querySelector('.filt'));document.getElementById('shop').scrollIntoView({behavior:'smooth'})">
+      <img src="https://i.postimg.cc/mcf6gBJN/IMG-0267.jpg" alt="Navy Blue Sweatshirt">
+      <div class="lb-overlay"><span class="lb-tag">Navy Blue Sweatshirt — Shop Now</span></div>
+    </div>
+    <div class="lb-item" onclick="doFilter('sweatshirt',document.querySelector('.filt'));document.getElementById('shop').scrollIntoView({behavior:'smooth'})">
+      <img src="https://i.postimg.cc/p9b1LR40/IMG-0275.jpg" alt="Navy Blue Sweatshirt">
+      <div class="lb-overlay"><span class="lb-tag">Navy Blue Sweatshirt</span></div>
+    </div>
+    <!-- Green Sweatshirt -->
+    <div class="lb-item" onclick="doFilter('sweatshirt',document.querySelector('.filt'));document.getElementById('shop').scrollIntoView({behavior:'smooth'})">
+      <img src="https://i.postimg.cc/3y5bxYz5/IMG-0279.jpg" alt="Green Sweatshirt">
+      <div class="lb-overlay"><span class="lb-tag">Green Sweatshirt — Shop Now</span></div>
+    </div>
+    <div class="lb-item" onclick="doFilter('sweatshirt',document.querySelector('.filt'));document.getElementById('shop').scrollIntoView({behavior:'smooth'})">
+      <img src="https://i.postimg.cc/QBQYBvZ4/IMG-0282.jpg" alt="Green Sweatshirt">
       <div class="lb-overlay"><span class="lb-tag">Green Sweatshirt</span></div>
-    </div>
-    <div class="lb-item wide" onclick="document.getElementById('shop').scrollIntoView({behavior:'smooth'})">
-      <img src="https://i.postimg.cc/z37m2b61/IMG-0139.avif" alt="Just Check Look">
-      <div class="lb-overlay"><span class="lb-tag">Black Hoodie</span></div>
-    </div>
-    <div class="lb-item" onclick="document.getElementById('shop').scrollIntoView({behavior:'smooth'})">
-      <img src="https://i.postimg.cc/TLcssFk9/IMG-0142.avif" alt="Just Check Look">
-      <div class="lb-overlay"><span class="lb-tag">Black Hoodie</span></div>
-    </div>
-    <div class="lb-item" onclick="document.getElementById('shop').scrollIntoView({behavior:'smooth'})">
-      <img src="https://i.postimg.cc/QB1wQH1J/IMG-0288.avif" alt="Just Check Look">
-      <div class="lb-overlay"><span class="lb-tag">Navy Blue Hoodie</span></div>
-    </div>
-    <div class="lb-item" onclick="document.getElementById('shop').scrollIntoView({behavior:'smooth'})">
-      <img src="https://i.postimg.cc/ct4zGh2G/IMG-0289.avif" alt="Just Check Look">
-      <div class="lb-overlay"><span class="lb-tag">Navy Blue Hoodie</span></div>
-    </div>
-    <div class="lb-item" onclick="document.getElementById('shop').scrollIntoView({behavior:'smooth'})">
-      <img src="https://i.postimg.cc/MXWNBZTm/IMG-0290.avif" alt="Just Check Look">
-      <div class="lb-overlay"><span class="lb-tag">Navy Blue Hoodie</span></div>
-    </div>
-    <div class="lb-item" onclick="document.getElementById('shop').scrollIntoView({behavior:'smooth'})">
-      <img src="https://i.postimg.cc/yWv5yq3d/IMG-0292.avif" alt="Just Check Look">
-      <div class="lb-overlay"><span class="lb-tag">Shop the Look</span></div>
-    </div>
-    <div class="lb-item" onclick="document.getElementById('shop').scrollIntoView({behavior:'smooth'})">
-      <img src="https://i.postimg.cc/N5nzZ14w/IMG-0293.avif" alt="Just Check Look">
-      <div class="lb-overlay"><span class="lb-tag">Shop the Look</span></div>
     </div>
   </div>
 </div>
@@ -979,32 +988,37 @@ const cardSizes={};
 
 function isMobile(){return window.innerWidth<=960}
 
-// Lifestyle images mapped to product categories
+// Lifestyle images correctly mapped by product color + category
 const lifestyleImgs = {
-  sweatshirt: ['https://i.postimg.cc/yg7Q0nVg/IMG-0291.jpg','https://i.postimg.cc/mcf6gBJN/IMG-0267.jpg'],
-  hoodie: ['https://i.postimg.cc/z37m2b61/IMG-0139.avif','https://i.postimg.cc/TLcssFk9/IMG-0142.avif','https://i.postimg.cc/QB1wQH1J/IMG-0288.avif','https://i.postimg.cc/ct4zGh2G/IMG-0289.avif','https://i.postimg.cc/MXWNBZTm/IMG-0290.avif','https://i.postimg.cc/p9b1LR40/IMG-0275.jpg','https://i.postimg.cc/3y5bxYz5/IMG-0279.jpg'],
-  shirt: ['https://i.postimg.cc/QBQYBvZ4/IMG-0282.jpg','https://i.postimg.cc/yWv5yq3d/IMG-0292.avif'],
-  short: ['https://i.postimg.cc/N5nzZ14w/IMG-0293.avif','https://i.postimg.cc/18NjSfCy/IMG-0294.avif']
+  hoodie_black:    ['https://i.postimg.cc/QB1wQH1J/IMG-0288.avif','https://i.postimg.cc/ct4zGh2G/IMG-0289.avif','https://i.postimg.cc/MXWNBZTm/IMG-0290.avif'],
+  hoodie_navyblue: ['https://i.postimg.cc/yWv5yq3d/IMG-0292.avif','https://i.postimg.cc/N5nzZ14w/IMG-0293.avif','https://i.postimg.cc/18NjSfCy/IMG-0294.avif','https://i.postimg.cc/mPF54tXR/IMG-0295.avif','https://i.postimg.cc/kV3hgqzh/IMG-0296.avif','https://i.postimg.cc/9R1xbT05/IMG-0297.avif'],
+  sweatshirt_navyblue: ['https://i.postimg.cc/mcf6gBJN/IMG-0267.jpg','https://i.postimg.cc/p9b1LR40/IMG-0275.jpg'],
+  sweatshirt_green:    ['https://i.postimg.cc/3y5bxYz5/IMG-0279.jpg','https://i.postimg.cc/QBQYBvZ4/IMG-0282.jpg'],
 };
-let lifestyleIdx = {sweatshirt:0,hoodie:0,shirt:0,short:0};
+const lifestyleIdxMap = {};
 
-function getLifestyleImg(cat) {
-  const imgs = lifestyleImgs[cat] || lifestyleImgs.hoodie;
-  const idx = lifestyleIdx[cat] || 0;
-  lifestyleIdx[cat] = (idx + 1) % imgs.length;
-  return imgs[idx];
+function getLifestyleImg(cat, color) {
+  const colorKey = color.toLowerCase().replace(/\s+/g,'');
+  const key = `${cat}_${colorKey}`;
+  const imgs = lifestyleImgs[key];
+  if(!imgs) return null;
+  if(!lifestyleIdxMap[key]) lifestyleIdxMap[key] = 0;
+  const img = imgs[lifestyleIdxMap[key]];
+  lifestyleIdxMap[key] = (lifestyleIdxMap[key] + 1) % imgs.length;
+  return img;
 }
 
 function renderGrid(f='all'){
-  lifestyleIdx = {sweatshirt:0,hoodie:0,shirt:0,short:0};
+  Object.keys(lifestyleIdxMap).forEach(k => lifestyleIdxMap[k] = 0);
   const list=f==='all'?products:products.filter(p=>p.cat===f);
   document.getElementById('grid').innerHTML=list.map((p,i)=>{
     const soldOut=p.stock===0;
+    const lsImg = getLifestyleImg(p.cat, p.color);
     return `
     <div class="card" style="animation-delay:${i*.04}s" data-id="${p.id}">
       <div class="card-img" onclick="${soldOut?'':'openModal('+p.id+')'}" style="${soldOut?'':'cursor:pointer'}">
-        <img class="lifestyle" src="${getLifestyleImg(p.cat)}" alt="${p.name} worn" loading="lazy">
-        <img class="primary" src="${p.img}" alt="${p.name} ${p.color}" loading="lazy">
+        ${lsImg ? `<img class="lifestyle" src="${lsImg}" alt="${p.name} worn" loading="lazy">` : ''}
+        <img class="primary${lsImg?'':' solo'}" src="${p.img}" alt="${p.name} ${p.color}" loading="lazy">
         ${soldOut?`<div class="card-tag sold">Sold Out</div>`:p.stock<=2?`<div class="card-tag low">Only ${p.stock} left</div>`:''}
         ${!soldOut?`<div class="card-quick">
           <div class="quick-label">Select Size to Add</div>
