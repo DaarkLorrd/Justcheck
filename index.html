@@ -183,6 +183,8 @@ img{display:block;max-width:100%}button{font-family:var(--fb)}
 .ticker{padding:13px 0;background:var(--gold);overflow:hidden}
 .ticker-track{display:flex;width:max-content;animation:tick 24s linear infinite}
 .ticker-item{font-family:var(--fd);font-size:13px;letter-spacing:3px;text-transform:uppercase;color:var(--ink);padding:0 44px;white-space:nowrap;display:flex;align-items:center;gap:44px}
+.ticker-item.clickable{cursor:pointer;transition:opacity .2s ease}
+.ticker-item.clickable:hover{opacity:.7}
 .ticker-item::after{content:'✦';font-size:7px}
 @keyframes tick{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 
@@ -206,9 +208,9 @@ img{display:block;max-width:100%}button{font-family:var(--fb)}
 .card{background:var(--ink);position:relative;animation:rise .6s var(--ease) both}
 @keyframes rise{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
 .card-img{position:relative;overflow:hidden;aspect-ratio:3/4;background:#141414}
-.card-img img.primary{width:100%;height:100%;object-fit:cover;transition:opacity .6s ease,transform .8s var(--ease);position:absolute;inset:0;z-index:2}
+.card-img img.primary{width:100%;height:100%;object-fit:cover;object-position:center top;transition:opacity .6s ease,transform .8s var(--ease);position:absolute;inset:0;z-index:2;image-rendering:auto}
 .card-img img.primary.solo{z-index:1}
-.card-img img.lifestyle{width:100%;height:100%;object-fit:cover;transition:opacity .6s ease,transform .8s var(--ease);position:absolute;inset:0;z-index:1;opacity:0}
+.card-img img.lifestyle{width:100%;height:100%;object-fit:cover;object-position:center top;transition:opacity .6s ease,transform .8s var(--ease);position:absolute;inset:0;z-index:1;opacity:0;image-rendering:auto}
 .card:hover .card-img img.primary:not(.solo){opacity:0;transform:scale(1.04)}
 .card:hover .card-img img.lifestyle{opacity:1;transform:scale(1.07)}
 .card-tag{position:absolute;top:16px;left:16px;font-size:8px;letter-spacing:2.5px;text-transform:uppercase;padding:5px 12px;font-weight:500;z-index:3}
@@ -235,7 +237,7 @@ img{display:block;max-width:100%}button{font-family:var(--fb)}
 /* REVIEWS SECTION */
 .reviews-sec{padding:80px 48px;background:#0e0e0e;border-top:1px solid rgba(247,246,242,.05)}
 .reviews-inner{max-width:1440px;margin:0 auto}
-.reviews-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:48px}
+.reviews-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-top:48px}
 .review-card{padding:32px 28px;border:1px solid rgba(247,246,242,.07);background:rgba(247,246,242,.02)}
 .review-stars{display:flex;gap:4px;margin-bottom:14px}
 .star{color:var(--gold);font-size:14px}
@@ -497,7 +499,7 @@ footer{background:var(--ink);border-top:1px solid rgba(247,246,242,.05);padding:
 .lb-item:hover .lb-tag{opacity:1;transform:translateY(0)}
 
 /* RESPONSIVE */
-@media(max-width:1200px){.grid{grid-template-columns:repeat(3,1fr)}.about-sec{grid-template-columns:1fr;gap:70px}.pay-grid{grid-template-columns:1fr 1fr}.reviews-grid{grid-template-columns:1fr 1fr}.lookbook-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:1200px){.grid{grid-template-columns:repeat(3,1fr)}.about-sec{grid-template-columns:1fr;gap:70px}.pay-grid{grid-template-columns:1fr 1fr}.reviews-grid{grid-template-columns:repeat(2,1fr)}.lookbook-grid{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:960px){
   .nav{padding:20px 28px}.nav.stuck{padding:14px 28px}
   .nav-links{display:none}.nav-size-guide{display:none}.ham{display:flex}
@@ -586,8 +588,22 @@ footer{background:var(--ink);border-top:1px solid rgba(247,246,242,.05);padding:
 <!-- TICKER -->
 <div class="ticker">
   <div class="ticker-track">
-    <div class="ticker-item">Just Check</div><div class="ticker-item">Shirts</div><div class="ticker-item">Shorts</div><div class="ticker-item">Sweatshirts</div><div class="ticker-item">Hoodies</div><div class="ticker-item">Unisex</div><div class="ticker-item">Lagos Worldwide</div><div class="ticker-item">Try It On</div>
-    <div class="ticker-item">Just Check</div><div class="ticker-item">Shirts</div><div class="ticker-item">Shorts</div><div class="ticker-item">Sweatshirts</div><div class="ticker-item">Hoodies</div><div class="ticker-item">Unisex</div><div class="ticker-item">Lagos Worldwide</div><div class="ticker-item">Try It On</div>
+    <div class="ticker-item">Just Check</div>
+    <div class="ticker-item clickable" onclick="filterAndScroll('shirt')">Shirts</div>
+    <div class="ticker-item clickable" onclick="filterAndScroll('short')">Shorts</div>
+    <div class="ticker-item clickable" onclick="filterAndScroll('sweatshirt')">Sweatshirts</div>
+    <div class="ticker-item clickable" onclick="filterAndScroll('hoodie')">Hoodies</div>
+    <div class="ticker-item">Unisex</div>
+    <div class="ticker-item">Lagos Worldwide</div>
+    <div class="ticker-item">Try It On</div>
+    <div class="ticker-item">Just Check</div>
+    <div class="ticker-item clickable" onclick="filterAndScroll('shirt')">Shirts</div>
+    <div class="ticker-item clickable" onclick="filterAndScroll('short')">Shorts</div>
+    <div class="ticker-item clickable" onclick="filterAndScroll('sweatshirt')">Sweatshirts</div>
+    <div class="ticker-item clickable" onclick="filterAndScroll('hoodie')">Hoodies</div>
+    <div class="ticker-item">Unisex</div>
+    <div class="ticker-item">Lagos Worldwide</div>
+    <div class="ticker-item">Try It On</div>
   </div>
 </div>
 
@@ -699,11 +715,14 @@ footer{background:var(--ink);border-top:1px solid rgba(247,246,242,.05);padding:
         <p class="review-text">"Ordered via WhatsApp and it arrived in 2 days. The Coffee shorts are everything — comfortable, stylish, and the material is top notch. 10/10."</p>
         <div class="review-author"><div class="review-avatar">F</div><div><div class="review-name">Folake B.</div><div class="review-loc">Port Harcourt, Nigeria</div></div></div>
       </div>
+      <div class="review-card">
+        <div class="review-stars">★★★★★</div>
+        <p class="review-text">"Thanks Just Check, I love it! The shorts and shirt — the material is so comfortable to wear in the evening considering the Nigerian weather."</p>
+        <div class="review-author"><div class="review-avatar">A</div><div><div class="review-name">Arya</div><div class="review-loc">Lagos, Nigeria</div></div></div>
+      </div>
     </div>
   </div>
 </div>
-
-<!-- ABOUT -->
 <section id="about" class="about-sec">
   <div class="about-imgs">
     <img class="about-main" src="https://i.postimg.cc/CL9775Tn/Just-Check-Sw-eatshirt-Green.jpg" alt="Just Check">
@@ -936,6 +955,12 @@ function closeUserPanel(){
   document.getElementById('userPanel').classList.remove('open');
   document.getElementById('userPanelBg').classList.remove('open');
   document.body.style.overflow='';
+}
+
+function filterAndScroll(cat) {
+  const btn = document.querySelector(`.filt[onclick*="'${cat}'"]`);
+  if(btn) doFilter(cat, btn);
+  document.getElementById('shop').scrollIntoView({behavior:'smooth'});
 }
 
 // NAV
