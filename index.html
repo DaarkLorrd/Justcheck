@@ -338,6 +338,13 @@ img{display:block;max-width:100%}button{font-family:var(--fb)}
 .confirm-btns{display:flex;flex-direction:column;gap:10px}
 .confirm-btn{width:100%;padding:14px;border:none;font-family:var(--fb);font-size:10.5px;letter-spacing:2.5px;text-transform:uppercase;font-weight:500;transition:all var(--fast)}
 .confirm-btn-wa{background:#1fad4e;color:#fff}.confirm-btn-wa:hover{background:#178c3e}
+.confirm-paga-box{background:rgba(27,58,107,.1);border:1px solid rgba(27,58,107,.3);padding:18px 20px;margin-bottom:24px;text-align:left}
+.confirm-paga-label{font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.confirm-paga-num{font-family:var(--fd);font-size:28px;color:#6e9bd9;letter-spacing:1px;margin-bottom:8px}
+.confirm-paga-hint{font-size:11px;color:rgba(247,246,242,.5);line-height:1.7}
+.confirm-success-icon{font-size:56px;display:block;margin-bottom:20px;animation:popIn .5s var(--ease)}
+.confirm-success-title{font-family:var(--fd);font-size:36px;text-transform:uppercase;letter-spacing:2px;margin-bottom:12px;color:var(--gold)}
+.confirm-success-text{font-size:13px;color:rgba(247,246,242,.6);line-height:1.9;margin-bottom:24px}
 .confirm-btn-paga{background:#1B3A6B;color:#fff}.confirm-btn-paga:hover{background:#122a50}
 .confirm-btn-cont{background:rgba(247,246,242,.08);color:var(--paper)}.confirm-btn-cont:hover{background:rgba(247,246,242,.15)}
 .confirm-x{position:absolute;top:16px;right:16px;width:34px;height:34px;background:none;border:1px solid rgba(247,246,242,.1);color:var(--paper);font-size:14px;display:flex;align-items:center;justify-content:center;transition:background var(--fast)}
@@ -485,22 +492,43 @@ footer{background:var(--ink);border-top:1px solid rgba(247,246,242,.05);padding:
 .user-signout{width:100%;padding:13px;background:none;border:1px solid rgba(247,246,242,.15);color:rgba(247,246,242,.5);font-family:var(--fb);font-size:10px;letter-spacing:2.5px;text-transform:uppercase;transition:all var(--fast)}
 .user-signout:hover{border-color:var(--red,#c0392b);color:var(--red,#c0392b)}
 
-/* LOOKBOOK */
-.lookbook-sec{padding:0;background:var(--ink);overflow:hidden}
-.lookbook-header{padding:64px 48px 40px;max-width:1440px;margin:0 auto;display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:16px}
-.lookbook-grid{display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:auto;gap:3px}
-.lb-item{overflow:hidden;position:relative;cursor:pointer}
-.lb-item img{width:100%;height:100%;object-fit:cover;object-position:center;display:block;transform:translateZ(0);-webkit-transform:translateZ(0);backface-visibility:hidden}
-.lb-item:hover img{transform:scale(1.04) translateZ(0)}
-.lb-item.tall{grid-row:span 2}
-.lb-item.wide{grid-column:span 2}
-.lb-overlay{position:absolute;inset:0;background:rgba(12,12,12,0);transition:background var(--t);display:flex;align-items:flex-end;padding:20px}
-.lb-item:hover .lb-overlay{background:rgba(12,12,12,.5)}
-.lb-tag{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--paper);opacity:0;transform:translateY(8px);transition:all var(--t)}
-.lb-item:hover .lb-tag{opacity:1;transform:translateY(0)}
+/* SPIN THE WHEEL */
+.spin-float{position:fixed;bottom:32px;left:32px;z-index:850;display:flex;align-items:center;gap:12px}
+.spin-tip{background:rgba(12,12,12,.9);color:var(--paper);padding:9px 18px;font-size:10.5px;opacity:0;transform:translateX(-8px);transition:all var(--t);pointer-events:none;border:1px solid rgba(247,246,242,.08);white-space:nowrap}
+.spin-float:hover .spin-tip{opacity:1;transform:translateX(0)}
+.spin-btn{width:58px;height:58px;background:var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;border:none;cursor:pointer;font-size:26px;animation:spinPulse 2.8s ease-in-out infinite}
+@keyframes spinPulse{0%,100%{box-shadow:0 4px 24px rgba(184,150,90,.4)}50%{box-shadow:0 4px 44px rgba(184,150,90,.7)}}
+
+.spin-bg{position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:1700;opacity:0;pointer-events:none;transition:opacity var(--t);display:flex;align-items:center;justify-content:center;padding:24px}
+.spin-bg.open{opacity:1;pointer-events:all}
+.spin-box{background:#111;max-width:420px;width:100%;padding:40px 36px;text-align:center;position:relative;border:1px solid rgba(184,150,90,.2)}
+.spin-x{position:absolute;top:16px;right:16px;width:34px;height:34px;background:none;border:1px solid rgba(247,246,242,.1);color:var(--paper);font-size:14px;display:flex;align-items:center;justify-content:center;transition:background var(--fast);cursor:pointer}
+.spin-x:hover{background:rgba(247,246,242,.08)}
+.spin-title{font-family:var(--fd);font-size:30px;text-transform:uppercase;letter-spacing:2px;margin-bottom:6px}
+.spin-sub{font-size:12px;color:rgba(247,246,242,.5);line-height:1.7;margin-bottom:24px}
+.spin-wheel-wrap{position:relative;width:240px;height:240px;margin:0 auto 28px}
+.spin-pointer{position:absolute;top:-10px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:12px solid transparent;border-right:12px solid transparent;border-top:20px solid var(--gold);z-index:10}
+.spin-wheel{width:240px;height:240px;border-radius:50%;position:relative;transition:transform 3.5s cubic-bezier(.17,.67,.32,1.2);border:4px solid var(--gold);overflow:hidden}
+.spin-wheel span{position:absolute;font-size:9px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;white-space:nowrap;width:90px;text-align:center;margin-left:-45px;margin-top:-6px}
+.spin-center-dot{position:absolute;top:50%;left:50%;width:14px;height:14px;background:var(--ink);border:2px solid var(--gold);border-radius:50%;transform:translate(-50%,-50%);z-index:5}
+.spin-phone-input{width:100%;background:rgba(247,246,242,.05);border:1px solid rgba(247,246,242,.15);color:var(--paper);padding:13px 16px;font-family:var(--fb);font-size:13px;outline:none;margin-bottom:14px;transition:border-color var(--fast)}
+.spin-phone-input:focus{border-color:var(--gold)}
+.spin-btn-go{width:100%;padding:14px;background:var(--gold);color:var(--ink);border:none;font-family:var(--fb);font-size:11px;letter-spacing:2.5px;text-transform:uppercase;font-weight:600;cursor:pointer;transition:background var(--fast)}
+.spin-btn-go:hover{background:var(--gold-l)}
+.spin-btn-go:disabled{opacity:.5;cursor:not-allowed}
+.spin-result{display:none;text-align:center}
+.spin-result-icon{font-size:48px;display:block;margin-bottom:14px}
+.spin-result-title{font-family:var(--fd);font-size:26px;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:10px}
+.spin-result-code{font-family:var(--fd);font-size:22px;letter-spacing:3px;color:var(--gold);background:rgba(184,150,90,.08);border:1px dashed rgba(184,150,90,.4);padding:12px;margin-bottom:16px}
+.spin-result-text{font-size:11px;color:var(--muted);line-height:1.7;margin-bottom:20px}
+
+@media(max-width:640px){
+  .spin-float{bottom:96px;left:20px}
+  .wa-float{bottom:32px;right:20px}
+}
 
 /* RESPONSIVE */
-@media(max-width:1200px){.grid{grid-template-columns:repeat(3,1fr)}.about-sec{grid-template-columns:1fr;gap:70px}.pay-grid{grid-template-columns:1fr 1fr}.reviews-grid{grid-template-columns:repeat(2,1fr)}.lookbook-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:1200px){.grid{grid-template-columns:repeat(3,1fr)}.about-sec{grid-template-columns:1fr;gap:70px}.pay-grid{grid-template-columns:1fr 1fr}.reviews-grid{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:960px){
   .nav{padding:20px 28px}.nav.stuck{padding:14px 28px}
   .nav-links{display:none}.nav-size-guide{display:none}.ham{display:flex}
@@ -514,8 +542,6 @@ footer{background:var(--ink);border-top:1px solid rgba(247,246,242,.05);padding:
   .pay-strip{padding:64px 24px}.foot-top{grid-template-columns:1fr 1fr}
   footer{padding:56px 24px 28px}.cart-drawer{width:100%}
   .reviews-sec{padding:60px 24px}.reviews-grid{grid-template-columns:1fr}
-  .lookbook-grid{grid-template-columns:repeat(2,1fr)}.lookbook-header{padding:48px 24px 32px}
-  .lb-item.tall{grid-row:span 1}.lb-item.wide{grid-column:span 1}
   .sg-box{padding:32px 24px}.confirm-box{padding:36px 24px}
 }
 @media(max-width:640px){
@@ -577,9 +603,9 @@ footer{background:var(--ink);border-top:1px solid rgba(247,246,242,.05);padding:
   </div>
   <div class="hero-right">
     <div class="hero-collage">
-      <div class="hc-item span2"><img src="https://i.postimg.cc/p9b1LR40/IMG-0275.jpg" alt="Just Check Look"></div>
-      <div class="hc-item"><img src="https://i.postimg.cc/yg7Q0nVg/IMG-0291.jpg" alt="Just Check Style"></div>
-      <div class="hc-item"><img src="https://i.postimg.cc/3y5bxYz5/IMG-0279.jpg" alt="Just Check Vibes"></div>
+      <div class="hc-item span2"><img src="https://i.postimg.cc/LXmNPWdY/Just-Check-Hoodie-Blue.jpg" alt="Just Check Hoodie"></div>
+      <div class="hc-item"><img src="https://i.postimg.cc/3R99FZ7f/Just-Check-Shirt-Black.jpg" alt="Just Check Shirt"></div>
+      <div class="hc-item"><img src="https://i.postimg.cc/8zWH0GTQ/Just-Check-Sw-eatshirt-Navy-Blue.jpg" alt="Just Check Sweatshirt"></div>
     </div>
     <div class="hero-veil"></div>
     <div class="hero-badge">NEW<br>DROP<br>2025</div>
@@ -626,75 +652,6 @@ footer{background:var(--ink);border-top:1px solid rgba(247,246,242,.05);padding:
   <div class="grid" id="grid"></div>
 </section>
 
-<!-- LOOKBOOK -->
-<div class="lookbook-sec">
-  <div class="lookbook-header">
-    <div>
-      <div class="sec-label">The Look</div>
-      <h2 class="sec-title">Worn in the Wild</h2>
-    </div>
-    <a href="#shop" class="btn btn-outline" style="padding:10px 28px;font-size:9.5px">Shop the Look →</a>
-  </div>
-  <div class="lookbook-grid">
-    <!-- Black Hoodie -->
-    <div class="lb-item tall" onclick="doFilter('hoodie',document.querySelector('.filt'));document.getElementById('shop').scrollIntoView({behavior:'smooth'})">
-      <img src="https://i.postimg.cc/QB1wQH1J/IMG-0288.avif" alt="Black Hoodie">
-      <div class="lb-overlay"><span class="lb-tag">Black Hoodie — Shop Now</span></div>
-    </div>
-    <div class="lb-item" onclick="doFilter('hoodie',document.querySelector('.filt'));document.getElementById('shop').scrollIntoView({behavior:'smooth'})">
-      <img src="https://i.postimg.cc/ct4zGh2G/IMG-0289.avif" alt="Black Hoodie">
-      <div class="lb-overlay"><span class="lb-tag">Black Hoodie</span></div>
-    </div>
-    <div class="lb-item" onclick="doFilter('hoodie',document.querySelector('.filt'));document.getElementById('shop').scrollIntoView({behavior:'smooth'})">
-      <img src="https://i.postimg.cc/MXWNBZTm/IMG-0290.avif" alt="Black Hoodie">
-      <div class="lb-overlay"><span class="lb-tag">Black Hoodie</span></div>
-    </div>
-    <!-- Navy Blue Hoodie -->
-    <div class="lb-item tall" onclick="doFilter('hoodie',document.querySelector('.filt'));document.getElementById('shop').scrollIntoView({behavior:'smooth'})">
-      <img src="https://i.postimg.cc/yWv5yq3d/IMG-0292.avif" alt="Navy Blue Hoodie">
-      <div class="lb-overlay"><span class="lb-tag">Navy Blue Hoodie — Shop Now</span></div>
-    </div>
-    <div class="lb-item" onclick="doFilter('hoodie',document.querySelector('.filt'));document.getElementById('shop').scrollIntoView({behavior:'smooth'})">
-      <img src="https://i.postimg.cc/N5nzZ14w/IMG-0293.avif" alt="Navy Blue Hoodie">
-      <div class="lb-overlay"><span class="lb-tag">Navy Blue Hoodie</span></div>
-    </div>
-    <div class="lb-item" onclick="doFilter('hoodie',document.querySelector('.filt'));document.getElementById('shop').scrollIntoView({behavior:'smooth'})">
-      <img src="https://i.postimg.cc/18NjSfCy/IMG-0294.avif" alt="Navy Blue Hoodie">
-      <div class="lb-overlay"><span class="lb-tag">Navy Blue Hoodie</span></div>
-    </div>
-    <div class="lb-item" onclick="doFilter('hoodie',document.querySelector('.filt'));document.getElementById('shop').scrollIntoView({behavior:'smooth'})">
-      <img src="https://i.postimg.cc/mPF54tXR/IMG-0295.avif" alt="Navy Blue Hoodie">
-      <div class="lb-overlay"><span class="lb-tag">Navy Blue Hoodie</span></div>
-    </div>
-    <div class="lb-item" onclick="doFilter('hoodie',document.querySelector('.filt'));document.getElementById('shop').scrollIntoView({behavior:'smooth'})">
-      <img src="https://i.postimg.cc/kV3hgqzh/IMG-0296.avif" alt="Navy Blue Hoodie">
-      <div class="lb-overlay"><span class="lb-tag">Navy Blue Hoodie</span></div>
-    </div>
-    <div class="lb-item wide" onclick="doFilter('hoodie',document.querySelector('.filt'));document.getElementById('shop').scrollIntoView({behavior:'smooth'})">
-      <img src="https://i.postimg.cc/9R1xbT05/IMG-0297.avif" alt="Navy Blue Hoodie">
-      <div class="lb-overlay"><span class="lb-tag">Navy Blue Hoodie</span></div>
-    </div>
-    <!-- Navy Blue Sweatshirt -->
-    <div class="lb-item" onclick="doFilter('sweatshirt',document.querySelector('.filt'));document.getElementById('shop').scrollIntoView({behavior:'smooth'})">
-      <img src="https://i.postimg.cc/mcf6gBJN/IMG-0267.jpg" alt="Navy Blue Sweatshirt">
-      <div class="lb-overlay"><span class="lb-tag">Navy Blue Sweatshirt — Shop Now</span></div>
-    </div>
-    <div class="lb-item" onclick="doFilter('sweatshirt',document.querySelector('.filt'));document.getElementById('shop').scrollIntoView({behavior:'smooth'})">
-      <img src="https://i.postimg.cc/p9b1LR40/IMG-0275.jpg" alt="Navy Blue Sweatshirt">
-      <div class="lb-overlay"><span class="lb-tag">Navy Blue Sweatshirt</span></div>
-    </div>
-    <!-- Green Sweatshirt -->
-    <div class="lb-item" onclick="doFilter('sweatshirt',document.querySelector('.filt'));document.getElementById('shop').scrollIntoView({behavior:'smooth'})">
-      <img src="https://i.postimg.cc/3y5bxYz5/IMG-0279.jpg" alt="Green Sweatshirt">
-      <div class="lb-overlay"><span class="lb-tag">Green Sweatshirt — Shop Now</span></div>
-    </div>
-    <div class="lb-item" onclick="doFilter('sweatshirt',document.querySelector('.filt'));document.getElementById('shop').scrollIntoView({behavior:'smooth'})">
-      <img src="https://i.postimg.cc/QBQYBvZ4/IMG-0282.jpg" alt="Green Sweatshirt">
-      <div class="lb-overlay"><span class="lb-tag">Green Sweatshirt</span></div>
-    </div>
-  </div>
-</div>
-
 <!-- REVIEWS -->
 <div class="reviews-sec">
   <div class="reviews-inner">
@@ -713,7 +670,7 @@ footer{background:var(--ink);border-top:1px solid rgba(247,246,242,.05);padding:
       </div>
       <div class="review-card">
         <div class="review-stars">★★★★★</div>
-        <p class="review-text">"Ordered via WhatsApp and it arrived in 2 days. The Coffee shorts are everything — comfortable, stylish, and the material is top notch. 10/10."</p>
+        <p class="review-text">"Ordered straight from the website and it arrived in 2 days. The Coffee shorts are everything — comfortable, stylish, and the material is top notch. 10/10."</p>
         <div class="review-author"><div class="review-avatar">F</div><div><div class="review-name">Folake B.</div><div class="review-loc">Port Harcourt, Nigeria</div></div></div>
       </div>
       <div class="review-card">
@@ -749,9 +706,9 @@ footer{background:var(--ink);border-top:1px solid rgba(247,246,242,.05);padding:
     <div class="sec-label">How to Order</div>
     <h2 class="sec-title">Payment & Delivery</h2>
     <div class="pay-grid">
-      <div class="pay-card"><span class="pay-icon">💬</span><div class="pay-title">WhatsApp Order</div><div class="pay-desc">Add items to your bag and checkout via WhatsApp. We confirm and send payment details instantly.<span class="pay-val">+234 708 244 8928</span></div></div>
-      <div class="pay-card"><span class="pay-icon">💳</span><div class="pay-title">Paga Payment</div><div class="pay-desc">Pay securely via Paga. Send payment then send proof to our WhatsApp to confirm your order.<span class="pay-val">Paga: 1581866786</span></div></div>
-      <div class="pay-card"><span class="pay-icon">🚚</span><div class="pay-title">Nationwide Delivery</div><div class="pay-desc">We deliver across Lagos and all of Nigeria. Delivery fee confirmed on WhatsApp after order.<span class="pay-val">Lagos & Nationwide</span></div></div>
+      <div class="pay-card"><span class="pay-icon">🛒</span><div class="pay-title">Order on the Website</div><div class="pay-desc">Add items to your bag, review your order, and confirm — fully completed right here on justcheck.shop.<span class="pay-val">No app needed</span></div></div>
+      <div class="pay-card"><span class="pay-icon">💳</span><div class="pay-title">Pay via Paga</div><div class="pay-desc">Send your total to our Paga number and confirm your order instantly on the site.<span class="pay-val">Paga: 1581866786</span></div></div>
+      <div class="pay-card"><span class="pay-icon">🚚</span><div class="pay-title">Nationwide Delivery</div><div class="pay-desc">We deliver across Lagos and all of Nigeria. Delivery fee confirmed after your order is placed.<span class="pay-val">Lagos & Nationwide</span></div></div>
     </div>
   </div>
 </div>
@@ -764,7 +721,7 @@ footer{background:var(--ink);border-top:1px solid rgba(247,246,242,.05);padding:
       <h2 class="sec-title">Let's<br>Connect</h2>
       <p class="contact-sub">Questions about sizing, stock, or delivery? Hit us up — we respond fast every day.</p>
       <div class="clinks">
-        <a href="https://wa.me/2347082448928" target="_blank" class="clink"><div class="clink-ico">💬</div><div><div class="clink-lbl">WhatsApp</div><div class="clink-val">+234 708 244 8928</div></div></a>
+        <a href="https://wa.me/2347082448928" target="_blank" class="clink"><div class="clink-ico">💬</div><div><div class="clink-lbl">Customer Care (WhatsApp)</div><div class="clink-val">+234 708 244 8928</div></div></a>
         <a href="https://www.instagram.com/justcheckclothing.co" target="_blank" class="clink"><div class="clink-ico">📸</div><div><div class="clink-lbl">Instagram</div><div class="clink-val">@justcheckclothing.co</div></div></a>
         <a href="https://www.tiktok.com/@justcheckclothing.co" target="_blank" class="clink"><div class="clink-ico">🎵</div><div><div class="clink-lbl">TikTok</div><div class="clink-val">@justcheckclothing.co</div></div></a>
         <div class="clink"><div class="clink-ico">💳</div><div><div class="clink-lbl">Paga</div><div class="clink-val">1581866786</div></div></div>
@@ -787,7 +744,7 @@ footer{background:var(--ink);border-top:1px solid rgba(247,246,242,.05);padding:
     <div><img class="foot-logo" src="https://i.imgur.com/pHnkue2.jpeg" alt="Just Check"><p class="foot-p">Premium streetwear from Lagos to the world. Just Check. Try it on.</p></div>
     <div><div class="foot-col-h">Navigate</div><ul class="foot-links"><li><a href="#home">Home</a></li><li><a href="#shop">Shop</a></li><li><a href="#about">About</a></li><li><a href="#contact">Contact</a></li></ul></div>
     <div><div class="foot-col-h">Info</div><ul class="foot-links"><li><a href="javascript:void(0)" onclick="openSG()">Size Guide</a></li><li><a href="#">Shipping</a></li><li><a href="#">Returns</a></li><li><a href="#">FAQ</a></li></ul></div>
-    <div><div class="foot-col-h">Contact</div><ul class="foot-links"><li><a href="https://wa.me/2347082448928" target="_blank">WhatsApp</a></li><li><a href="#">Paga: 1581866786</a></li><li><a href="https://www.instagram.com/justcheckclothing.co" target="_blank">Instagram</a></li><li><a href="https://www.tiktok.com/@justcheckclothing.co" target="_blank">TikTok</a></li></ul></div>
+    <div><div class="foot-col-h">Contact</div><ul class="foot-links"><li><a href="https://wa.me/2347082448928" target="_blank">Customer Care</a></li><li><a href="#">Paga: 1581866786</a></li><li><a href="https://www.instagram.com/justcheckclothing.co" target="_blank">Instagram</a></li><li><a href="https://www.tiktok.com/@justcheckclothing.co" target="_blank">TikTok</a></li></ul></div>
   </div>
   <div class="foot-bot">
     <div class="foot-copy">© 2025 Just Check Clothing Co. Lagos, Nigeria.</div>
@@ -796,7 +753,39 @@ footer{background:var(--ink);border-top:1px solid rgba(247,246,242,.05);padding:
 </footer>
 
 <!-- WA FLOAT -->
-<div class="wa-float"><div class="wa-tip">Order on WhatsApp</div><a href="https://wa.me/2347082448928" target="_blank" class="wa-btn">💬</a></div>
+<div class="wa-float"><div class="wa-tip">Need Help? Chat with Customer Care</div><a href="https://wa.me/2347082448928" target="_blank" class="wa-btn">💬</a></div>
+
+<!-- SPIN THE WHEEL -->
+<div class="spin-float" id="spinFloat" onclick="openSpin()">
+  <button class="spin-btn">🎰</button>
+  <div class="spin-tip">Spin to Win!</div>
+</div>
+
+<div class="spin-bg" id="spinBg" onclick="closeSpinOut(event)">
+  <div class="spin-box">
+    <button class="spin-x" onclick="closeSpin()">✕</button>
+
+    <div id="spinEntry">
+      <div class="spin-title">Spin to Win</div>
+      <p class="spin-sub">Enter your WhatsApp number for a chance to win a discount. One spin per customer.</p>
+      <div class="spin-wheel-wrap">
+        <div class="spin-pointer"></div>
+        <div class="spin-wheel" id="spinWheel"></div>
+        <div class="spin-center-dot"></div>
+      </div>
+      <input class="spin-phone-input" id="spinPhone" type="tel" placeholder="Your WhatsApp number e.g. 0807...">
+      <button class="spin-btn-go" id="spinGoBtn" onclick="startSpin()">Spin the Wheel</button>
+    </div>
+
+    <div class="spin-result" id="spinResult">
+      <span class="spin-result-icon" id="spinResultIcon">🎉</span>
+      <div class="spin-result-title" id="spinResultTitle"></div>
+      <div class="spin-result-code" id="spinResultCode"></div>
+      <p class="spin-result-text" id="spinResultText"></p>
+      <button class="confirm-btn confirm-btn-cont" onclick="closeSpin()" style="width:100%">Close</button>
+    </div>
+  </div>
+</div>
 
 <!-- CART DRAWER -->
 <div class="cart-veil" id="cartVeil" onclick="toggleCart()"></div>
@@ -808,7 +797,7 @@ footer{background:var(--ink);border-top:1px solid rgba(247,246,242,.05);padding:
   <div class="cart-scroll" id="cartScroll"></div>
   <div class="cart-foot" id="cartFoot" style="display:none">
     <div class="cart-total-row"><span class="cart-total-lbl">Total</span><span class="cart-total-amt" id="cartAmt">₦0</span></div>
-    <div class="cart-note">Delivery fee confirmed via WhatsApp after order.</div>
+    <div class="cart-note">Delivery fee confirmed at checkout.</div>
     <div class="cart-btns">
       <button class="cbtn cbtn-checkout" onclick="openConfirm()">Review & Checkout →</button>
     </div>
@@ -836,8 +825,7 @@ footer{background:var(--ink);border-top:1px solid rgba(247,246,242,.05);padding:
       <div><div class="mlabel">Quantity</div><div class="qty-row"><button class="qb" onclick="adjQ(-1)">−</button><input class="qn" id="qtyVal" value="1" readonly><button class="qb" onclick="adjQ(1)">+</button></div></div>
       <div class="modal-actions">
         <button class="mact mact-bag" onclick="addFromModal()">Add to Bag</button>
-        <button class="mact mact-wa" onclick="buyWA()">💬 Buy Now — WhatsApp</button>
-        <button class="mact mact-paga" onclick="buyPaga()">💳 Pay via Paga</button>
+        <button class="mact mact-paga" onclick="buyNowModal()">Buy Now — Pay via Paga</button>
       </div>
     </div>
   </div>
@@ -874,20 +862,24 @@ footer{background:var(--ink);border-top:1px solid rgba(247,246,242,.05);padding:
 
 <!-- ORDER CONFIRMATION -->
 <div class="confirm-bg" id="confirmBg">
-  <div class="confirm-box">
+  <div class="confirm-box" id="confirmBoxInner">
     <button class="confirm-x" onclick="closeConfirm()">✕</button>
     <span class="confirm-icon">🛍️</span>
     <div class="confirm-title">Order Summary</div>
-    <p class="confirm-sub">Review your items before placing your order. Choose how you'd like to pay below.</p>
+    <p class="confirm-sub">Review your items, then pay via Paga to complete your order. Your order is placed entirely on the website — no need to message us first.</p>
     <div class="confirm-ref" id="confirmRef"></div>
     <div class="confirm-items" id="confirmItems"></div>
     <div class="confirm-total">
       <span class="confirm-total-lbl">Total</span>
       <span class="confirm-total-amt" id="confirmTotal"></span>
     </div>
+    <div class="confirm-paga-box">
+      <div class="confirm-paga-label">Pay this amount via Paga</div>
+      <div class="confirm-paga-num">1581866786</div>
+      <div class="confirm-paga-hint">Send the exact total above to this Paga number, then tap the button below to confirm your order.</div>
+    </div>
     <div class="confirm-btns">
-      <button class="confirm-btn confirm-btn-wa" onclick="checkoutWA()">💬 Order via WhatsApp</button>
-      <button class="confirm-btn confirm-btn-paga" onclick="checkoutPaga()">💳 Pay via Paga · 1581866786</button>
+      <button class="confirm-btn confirm-btn-paga" onclick="placeOrder()">✓ I've Paid — Place My Order</button>
       <button class="confirm-btn confirm-btn-cont" onclick="closeConfirm()">← Continue Shopping</button>
     </div>
   </div>
@@ -1014,37 +1006,14 @@ const cardSizes={};
 
 function isMobile(){return window.innerWidth<=960}
 
-// Lifestyle images correctly mapped by product color + category
-const lifestyleImgs = {
-  hoodie_black:    ['https://i.postimg.cc/QB1wQH1J/IMG-0288.avif','https://i.postimg.cc/ct4zGh2G/IMG-0289.avif','https://i.postimg.cc/MXWNBZTm/IMG-0290.avif'],
-  hoodie_navyblue: ['https://i.postimg.cc/yWv5yq3d/IMG-0292.avif','https://i.postimg.cc/N5nzZ14w/IMG-0293.avif','https://i.postimg.cc/18NjSfCy/IMG-0294.avif','https://i.postimg.cc/mPF54tXR/IMG-0295.avif','https://i.postimg.cc/kV3hgqzh/IMG-0296.avif','https://i.postimg.cc/9R1xbT05/IMG-0297.avif'],
-  sweatshirt_navyblue: ['https://i.postimg.cc/mcf6gBJN/IMG-0267.jpg','https://i.postimg.cc/p9b1LR40/IMG-0275.jpg'],
-  sweatshirt_green:    ['https://i.postimg.cc/3y5bxYz5/IMG-0279.jpg','https://i.postimg.cc/QBQYBvZ4/IMG-0282.jpg'],
-};
-const lifestyleIdxMap = {};
-
-function getLifestyleImg(cat, color) {
-  const colorKey = color.toLowerCase().replace(/\s+/g,'');
-  const key = `${cat}_${colorKey}`;
-  const imgs = lifestyleImgs[key];
-  if(!imgs) return null;
-  if(!lifestyleIdxMap[key]) lifestyleIdxMap[key] = 0;
-  const img = imgs[lifestyleIdxMap[key]];
-  lifestyleIdxMap[key] = (lifestyleIdxMap[key] + 1) % imgs.length;
-  return img;
-}
-
 function renderGrid(f='all'){
-  Object.keys(lifestyleIdxMap).forEach(k => lifestyleIdxMap[k] = 0);
   const list=f==='all'?products:products.filter(p=>p.cat===f);
   document.getElementById('grid').innerHTML=list.map((p,i)=>{
     const soldOut=p.stock===0;
-    const lsImg = getLifestyleImg(p.cat, p.color);
     return `
     <div class="card" style="animation-delay:${i*.04}s" data-id="${p.id}">
       <div class="card-img" onclick="${soldOut?'':'openModal('+p.id+')'}" style="${soldOut?'':'cursor:pointer'}">
-        ${lsImg ? `<img class="lifestyle" src="${lsImg}" alt="${p.name} worn" loading="lazy">` : ''}
-        <img class="primary${lsImg?'':' solo'}" src="${p.img}" alt="${p.name} ${p.color}" loading="lazy">
+        <img class="primary solo" src="${p.img}" alt="${p.name} ${p.color}" loading="lazy">
         ${soldOut?`<div class="card-tag sold">Sold Out</div>`:p.stock<=2?`<div class="card-tag low">Only ${p.stock} left</div>`:''}
         ${!soldOut?`<div class="card-quick">
           <div class="quick-label">Select Size to Add</div>
@@ -1152,15 +1121,11 @@ function closeModal(){
 }
 function closeModalOut(e){if(e.target===document.getElementById('modalBg'))closeModal()}
 function addFromModal(){if(!curProd||!curSize)return;addToCart(curProd,curSize,curQty);closeModal()}
-function buyWA(){
-  if(!curProd)return;
-  const msg=`Hi! I want to buy:\n*${curProd.name} — ${curProd.color}*\nSize: ${curSize} · Qty: ${curQty}\nTotal: ${fp(curProd.price*curQty)}\n\nPlease confirm!`;
-  window.open(`https://wa.me/2347082448928?text=${encodeURIComponent(msg)}`,'_blank');
-}
-function buyPaga(){
-  if(!curProd)return;
-  const msg=`Hi! I paid via Paga (1581866786) for:\n*${curProd.name} — ${curProd.color}*\nSize: ${curSize} · Qty: ${curQty}\nAmount: ${fp(curProd.price*curQty)}\n\nPlease confirm!`;
-  window.open(`https://wa.me/2347082448928?text=${encodeURIComponent(msg)}`,'_blank');
+function buyNowModal(){
+  if(!curProd||!curSize)return;
+  addToCart(curProd,curSize,curQty);
+  closeModal();
+  openConfirm();
 }
 
 // CART
@@ -1205,9 +1170,34 @@ function toggleCart(){
 }
 
 // ORDER CONFIRMATION
+function resetConfirmBox(){
+  document.getElementById('confirmBoxInner').innerHTML = `
+    <button class="confirm-x" onclick="closeConfirm()">✕</button>
+    <span class="confirm-icon">🛍️</span>
+    <div class="confirm-title">Order Summary</div>
+    <p class="confirm-sub">Review your items, then pay via Paga to complete your order. Your order is placed entirely on the website — no need to message us first.</p>
+    <div class="confirm-ref" id="confirmRef"></div>
+    <div class="confirm-items" id="confirmItems"></div>
+    <div class="confirm-total">
+      <span class="confirm-total-lbl">Total</span>
+      <span class="confirm-total-amt" id="confirmTotal"></span>
+    </div>
+    <div class="confirm-paga-box">
+      <div class="confirm-paga-label">Pay this amount via Paga</div>
+      <div class="confirm-paga-num">1581866786</div>
+      <div class="confirm-paga-hint">Send the exact total above to this Paga number, then tap the button below to confirm your order.</div>
+    </div>
+    <div class="confirm-btns">
+      <button class="confirm-btn confirm-btn-paga" onclick="placeOrder()">✓ I've Paid — Place My Order</button>
+      <button class="confirm-btn confirm-btn-cont" onclick="closeConfirm()">← Continue Shopping</button>
+    </div>
+  `;
+}
+
 function openConfirm(){
   if(!cart.length)return;
-  toggleCart();
+  resetConfirmBox();
+  if(document.getElementById('cartDrawer').classList.contains('open')) toggleCart();
   const total=cart.reduce((a,i)=>a+i.product.price*i.qty,0);
   const ref='JC-'+Date.now().toString(36).toUpperCase();
   document.getElementById('confirmRef').textContent=`Order Reference: ${ref}`;
@@ -1244,26 +1234,24 @@ async function notifyWebhook(items, total, method, ref, customerName, customerEm
   } catch(e) { console.error('Webhook error:', e); }
 }
 
-async function checkoutWA(){
+async function placeOrder(){
   const items = cart.map(i=>({name:i.product.name,color:i.product.color,size:i.size,qty:i.qty,price:i.product.price}));
-  const s=cart.map(i=>`• ${i.product.name} ${i.product.color} (${i.size} ×${i.qty}) — ${fp(i.product.price*i.qty)}`).join('\n');
-  const t=cart.reduce((a,i)=>a+i.product.price*i.qty,0);
-  let ref=document.getElementById('confirmRef').textContent.replace('Order Reference: ','');
-  const user = typeof auth !== 'undefined' ? auth.currentUser : null;
-  if(window.saveOrder) ref=await window.saveOrder(items,t,'WhatsApp')||ref;
-  await notifyWebhook(items,t,'WhatsApp',ref,user?.displayName,user?.email);
-  window.open(`https://wa.me/2347082448928?text=${encodeURIComponent(`Hi Just Check! I'd like to order:\n\n${s}\n\n*Total: ${fp(t)}*\nRef: ${ref}\n\nPlease confirm!`)}`,'_blank');
-}
-
-async function checkoutPaga(){
-  const items = cart.map(i=>({name:i.product.name,color:i.product.color,size:i.size,qty:i.qty,price:i.product.price}));
-  const s=cart.map(i=>`• ${i.product.name} ${i.product.color} (${i.size} ×${i.qty}) — ${fp(i.product.price*i.qty)}`).join('\n');
   const t=cart.reduce((a,i)=>a+i.product.price*i.qty,0);
   let ref=document.getElementById('confirmRef').textContent.replace('Order Reference: ','');
   const user = typeof auth !== 'undefined' ? auth.currentUser : null;
   if(window.saveOrder) ref=await window.saveOrder(items,t,'Paga')||ref;
   await notifyWebhook(items,t,'Paga',ref,user?.displayName,user?.email);
-  window.open(`https://wa.me/2347082448928?text=${encodeURIComponent(`Hi! I paid via Paga (1581866786).\n\nOrder:\n${s}\n\n*Total: ${fp(t)}*\nRef: ${ref}\n\nPlease confirm!`)}`,'_blank');
+
+  const box = document.getElementById('confirmBoxInner');
+  box.innerHTML = `
+    <button class="confirm-x" onclick="closeConfirm()">✕</button>
+    <span class="confirm-success-icon">✅</span>
+    <div class="confirm-success-title">Order Placed!</div>
+    <p class="confirm-success-text">Thank you for shopping with Just Check. Your order <strong style="color:var(--gold)">${ref}</strong> has been received and is being processed.<br><br>You'll be contacted once your payment is verified and your order is on its way.</p>
+    <div class="confirm-btns">
+      <button class="confirm-btn confirm-btn-cont" onclick="closeConfirm();cart=[];updateCart()">Continue Shopping →</button>
+    </div>
+  `;
 }
 
 function showToast(msg){
@@ -1274,6 +1262,117 @@ function showToast(msg){
 
 // GOOGLE ANALYTICS EVENTS
 function trackEvent(name,params){if(typeof gtag!=='undefined')gtag('event',name,params)}
+
+// SPIN THE WHEEL
+const spinSegments = [
+  { label: 'Try Again',      color: '#1a1a1a', textColor:'#f7f6f2', win: false },
+  { label: '10% OFF',        color: '#b8965a', textColor:'#0c0c0c', win: true,  code:'SPIN10',  desc:'10% off your next order' },
+  { label: 'No Luck',        color: '#0c0c0c', textColor:'#f7f6f2', win: false },
+  { label: 'Free Delivery',  color: '#d4b483', textColor:'#0c0c0c', win: true,  code:'FREEDEL', desc:'Free delivery on your next order' },
+  { label: 'Try Again',      color: '#1a1a1a', textColor:'#f7f6f2', win: false },
+  { label: '₦1,000 OFF',     color: '#b8965a', textColor:'#0c0c0c', win: true,  code:'SAVE1K',  desc:'₦1,000 off your next order' },
+  { label: 'No Luck',        color: '#0c0c0c', textColor:'#f7f6f2', win: false },
+  { label: 'Better Luck',    color: '#1a1a1a', textColor:'#f7f6f2', win: false }
+];
+const segAngle = 360 / spinSegments.length;
+let spinUsed = false;
+let spinning = false;
+
+function buildWheel() {
+  const wheel = document.getElementById('spinWheel');
+  if(!wheel || wheel.children.length) return;
+  wheel.style.background = `conic-gradient(${spinSegments.map((s,i)=>`${s.color} ${i*segAngle}deg ${(i+1)*segAngle}deg`).join(',')})`;
+  spinSegments.forEach((s,i) => {
+    const mid = i*segAngle + segAngle/2;
+    const label = document.createElement('span');
+    label.textContent = s.label;
+    label.style.color = s.textColor;
+    label.style.transform = `rotate(${mid}deg) translate(0,-92px) rotate(${-mid}deg)`;
+    label.style.left = '50%';
+    label.style.top = '50%';
+    wheel.appendChild(label);
+  });
+}
+
+function openSpin(){
+  if(localStorage.getItem('jc_spin_used')) {
+    showToast('You have already used your spin 🎰');
+    return;
+  }
+  buildWheel();
+  document.getElementById('spinBg').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeSpin(){
+  document.getElementById('spinBg').classList.remove('open');
+  document.body.style.overflow='';
+}
+function closeSpinOut(e){ if(e.target===document.getElementById('spinBg')) closeSpin(); }
+
+// Weighted random — low win chance overall (~16% combined across 3 win segments)
+function pickWeightedSegment() {
+  const weights = spinSegments.map(s => s.win ? (s.code==='SAVE1K'?3:s.code==='FREEDEL'?8:5) : 21);
+  const total = weights.reduce((a,b)=>a+b,0);
+  let r = Math.random()*total;
+  for(let i=0;i<weights.length;i++){
+    if(r < weights[i]) return i;
+    r -= weights[i];
+  }
+  return spinSegments.length-1;
+}
+
+async function startSpin(){
+  const phone = document.getElementById('spinPhone').value.trim();
+  if(!phone || phone.length < 8){
+    document.getElementById('spinPhone').style.borderColor = '#c0392b';
+    setTimeout(()=>document.getElementById('spinPhone').style.borderColor='',1200);
+    return;
+  }
+  if(spinning) return;
+  spinning = true;
+  document.getElementById('spinGoBtn').disabled = true;
+  document.getElementById('spinGoBtn').textContent = 'Spinning...';
+
+  const idx = pickWeightedSegment();
+  const seg = spinSegments[idx];
+  const targetMid = idx*segAngle + segAngle/2;
+  const spins = 5; // full rotations for drama
+  const finalRotation = (spins*360) + (360 - targetMid);
+
+  const wheel = document.getElementById('spinWheel');
+  wheel.style.transform = `rotate(${finalRotation}deg)`;
+
+  // Save lead + result to Firestore + webhook regardless of win/lose
+  try {
+    if(typeof db !== 'undefined'){
+      await db.collection('spinLeads').add({
+        phone: phone,
+        result: seg.label,
+        win: seg.win,
+        code: seg.code || null,
+        timestamp: new Date().toISOString()
+      });
+    }
+  } catch(e){ console.error(e); }
+
+  setTimeout(() => {
+    document.getElementById('spinEntry').style.display = 'none';
+    document.getElementById('spinResult').style.display = 'block';
+    if(seg.win){
+      document.getElementById('spinResultIcon').textContent = '🎉';
+      document.getElementById('spinResultTitle').textContent = 'You Won!';
+      document.getElementById('spinResultCode').textContent = seg.code;
+      document.getElementById('spinResultText').textContent = `${seg.desc}. Show this code to Customer Care on WhatsApp when placing your order to redeem it.`;
+    } else {
+      document.getElementById('spinResultIcon').textContent = '😔';
+      document.getElementById('spinResultTitle').textContent = 'No Win This Time';
+      document.getElementById('spinResultCode').textContent = '—';
+      document.getElementById('spinResultText').textContent = 'Better luck next time! Keep an eye out for our next promo drop.';
+    }
+    localStorage.setItem('jc_spin_used','1');
+    spinning = false;
+  }, 3600);
+}
 
 renderGrid(); updateCart();
 </script>
