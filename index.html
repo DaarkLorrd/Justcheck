@@ -6,6 +6,11 @@
 <title>JUST CHECK — Just Check. Try it on.</title>
 <!-- Google Analytics -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-HEPYBVVW0C"></script>
+<!-- Paystack -->
+<script src="https://js.paystack.co/v1/inline.js"></script>
+<script>
+  const PAYSTACK_PUBLIC_KEY = "pk_live_511ccedef5ffb38b0bf1adb9f185c34d5f9c82ed";
+</script>
 <script>
   window.dataLayer=window.dataLayer||[];
   function gtag(){dataLayer.push(arguments)}
@@ -55,23 +60,24 @@
     closeUserPanel();
   };
 
-  // Save order to Firestore
-  window.saveOrder = async (items, total, method) => {
-    if(!currentUser) return null;
-    const ref = 'JC-'+Date.now().toString(36).toUpperCase();
+  // Save order to Firestore (works for signed-in users and guests)
+  window.saveOrder = async (items, total, method, ref, email, name, paystackRef) => {
+    const orderRef = ref || ('JC-'+Date.now().toString(36).toUpperCase());
     try {
       await db.collection('orders').add({
-        uid: currentUser.uid,
-        email: currentUser.email,
-        name: currentUser.displayName,
+        uid: currentUser ? currentUser.uid : null,
+        email: email || (currentUser ? currentUser.email : 'guest'),
+        name: name || (currentUser ? currentUser.displayName : 'Guest'),
         items: items,
         total: total,
         method: method,
-        ref: ref,
+        ref: orderRef,
+        paystackRef: paystackRef || null,
+        status: 'paid',
         timestamp: new Date().toISOString()
       });
     } catch(e) { console.error(e); }
-    return ref;
+    return orderRef;
   };
 
   // Load user orders
@@ -279,7 +285,7 @@ img{display:block;max-width:100%}button{font-family:var(--fb)}
 .mact{width:100%;padding:14px;border:none;font-family:var(--fb);font-size:10.5px;letter-spacing:2.5px;text-transform:uppercase;font-weight:500;transition:all var(--fast);display:flex;align-items:center;justify-content:center;gap:10px}
 .mact-bag{background:var(--paper);color:var(--ink)}.mact-bag:hover{background:var(--gold)}
 .mact-wa{background:#1fad4e;color:#fff}.mact-wa:hover{background:#178c3e}
-.mact-paga{background:#1B3A6B;color:#fff}.mact-paga:hover{background:#122a50}
+.mact-paga{background:var(--gold);color:var(--ink)}.mact-paga:hover{background:var(--gold-l)}
 
 /* MOBILE MODAL */
 @media(max-width:960px){
@@ -338,14 +344,15 @@ img{display:block;max-width:100%}button{font-family:var(--fb)}
 .confirm-btns{display:flex;flex-direction:column;gap:10px}
 .confirm-btn{width:100%;padding:14px;border:none;font-family:var(--fb);font-size:10.5px;letter-spacing:2.5px;text-transform:uppercase;font-weight:500;transition:all var(--fast)}
 .confirm-btn-wa{background:#1fad4e;color:#fff}.confirm-btn-wa:hover{background:#178c3e}
-.confirm-paga-box{background:rgba(27,58,107,.1);border:1px solid rgba(27,58,107,.3);padding:18px 20px;margin-bottom:24px;text-align:left}
+.confirm-paga-box{background:rgba(184,150,90,.08);border:1px solid rgba(184,150,90,.25);padding:18px 20px;margin-bottom:24px;text-align:left}
 .confirm-paga-label{font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
-.confirm-paga-num{font-family:var(--fd);font-size:28px;color:#6e9bd9;letter-spacing:1px;margin-bottom:8px}
+.confirm-email-input{width:100%;background:rgba(247,246,242,.05);border:1px solid rgba(247,246,242,.15);color:var(--paper);padding:12px 14px;font-family:var(--fb);font-size:13px;margin-top:6px;outline:none;transition:border-color var(--fast)}
+.confirm-email-input:focus{border-color:var(--gold)}
 .confirm-paga-hint{font-size:11px;color:rgba(247,246,242,.5);line-height:1.7}
+.confirm-btn-paga{background:var(--gold);color:var(--ink)}.confirm-btn-paga:hover{background:var(--gold-l)}
 .confirm-success-icon{font-size:56px;display:block;margin-bottom:20px;animation:popIn .5s var(--ease)}
 .confirm-success-title{font-family:var(--fd);font-size:36px;text-transform:uppercase;letter-spacing:2px;margin-bottom:12px;color:var(--gold)}
 .confirm-success-text{font-size:13px;color:rgba(247,246,242,.6);line-height:1.9;margin-bottom:24px}
-.confirm-btn-paga{background:#1B3A6B;color:#fff}.confirm-btn-paga:hover{background:#122a50}
 .confirm-btn-cont{background:rgba(247,246,242,.08);color:var(--paper)}.confirm-btn-cont:hover{background:rgba(247,246,242,.15)}
 .confirm-x{position:absolute;top:16px;right:16px;width:34px;height:34px;background:none;border:1px solid rgba(247,246,242,.1);color:var(--paper);font-size:14px;display:flex;align-items:center;justify-content:center;transition:background var(--fast)}
 .confirm-x:hover{background:rgba(247,246,242,.08)}
@@ -707,7 +714,7 @@ footer{background:var(--ink);border-top:1px solid rgba(247,246,242,.05);padding:
     <h2 class="sec-title">Payment & Delivery</h2>
     <div class="pay-grid">
       <div class="pay-card"><span class="pay-icon">🛒</span><div class="pay-title">Order on the Website</div><div class="pay-desc">Add items to your bag, review your order, and confirm — fully completed right here on justcheck.shop.<span class="pay-val">No app needed</span></div></div>
-      <div class="pay-card"><span class="pay-icon">💳</span><div class="pay-title">Pay via Paga</div><div class="pay-desc">Send your total to our Paga number and confirm your order instantly on the site.<span class="pay-val">Paga: 1581866786</span></div></div>
+      <div class="pay-card"><span class="pay-icon">💳</span><div class="pay-title">Secure Card Payment</div><div class="pay-desc">Pay instantly with your debit/credit card, bank transfer, or USSD — powered by Paystack. Fully automated and secure.<span class="pay-val">Checkout on Site</span></div></div>
       <div class="pay-card"><span class="pay-icon">🚚</span><div class="pay-title">Nationwide Delivery</div><div class="pay-desc">We deliver across Lagos and all of Nigeria. Delivery fee confirmed after your order is placed.<span class="pay-val">Lagos & Nationwide</span></div></div>
     </div>
   </div>
@@ -724,7 +731,7 @@ footer{background:var(--ink);border-top:1px solid rgba(247,246,242,.05);padding:
         <a href="https://wa.me/2347082448928" target="_blank" class="clink"><div class="clink-ico">💬</div><div><div class="clink-lbl">Customer Care (WhatsApp)</div><div class="clink-val">+234 708 244 8928</div></div></a>
         <a href="https://www.instagram.com/justcheckclothing.co" target="_blank" class="clink"><div class="clink-ico">📸</div><div><div class="clink-lbl">Instagram</div><div class="clink-val">@justcheckclothing.co</div></div></a>
         <a href="https://www.tiktok.com/@justcheckclothing.co" target="_blank" class="clink"><div class="clink-ico">🎵</div><div><div class="clink-lbl">TikTok</div><div class="clink-val">@justcheckclothing.co</div></div></a>
-        <div class="clink"><div class="clink-ico">💳</div><div><div class="clink-lbl">Paga</div><div class="clink-val">1581866786</div></div></div>
+        <div class="clink"><div class="clink-ico">💳</div><div><div class="clink-lbl">Secure Checkout</div><div class="clink-val">Card · Bank Transfer · USSD</div></div></div>
       </div>
     </div>
     <div>
@@ -744,7 +751,7 @@ footer{background:var(--ink);border-top:1px solid rgba(247,246,242,.05);padding:
     <div><img class="foot-logo" src="https://i.imgur.com/pHnkue2.jpeg" alt="Just Check"><p class="foot-p">Premium streetwear from Lagos to the world. Just Check. Try it on.</p></div>
     <div><div class="foot-col-h">Navigate</div><ul class="foot-links"><li><a href="#home">Home</a></li><li><a href="#shop">Shop</a></li><li><a href="#about">About</a></li><li><a href="#contact">Contact</a></li></ul></div>
     <div><div class="foot-col-h">Info</div><ul class="foot-links"><li><a href="javascript:void(0)" onclick="openSG()">Size Guide</a></li><li><a href="#">Shipping</a></li><li><a href="#">Returns</a></li><li><a href="#">FAQ</a></li></ul></div>
-    <div><div class="foot-col-h">Contact</div><ul class="foot-links"><li><a href="https://wa.me/2347082448928" target="_blank">Customer Care</a></li><li><a href="#">Paga: 1581866786</a></li><li><a href="https://www.instagram.com/justcheckclothing.co" target="_blank">Instagram</a></li><li><a href="https://www.tiktok.com/@justcheckclothing.co" target="_blank">TikTok</a></li></ul></div>
+    <div><div class="foot-col-h">Contact</div><ul class="foot-links"><li><a href="https://wa.me/2347082448928" target="_blank">Customer Care</a></li><li><a href="#">Secure Checkout</a></li><li><a href="https://www.instagram.com/justcheckclothing.co" target="_blank">Instagram</a></li><li><a href="https://www.tiktok.com/@justcheckclothing.co" target="_blank">TikTok</a></li></ul></div>
   </div>
   <div class="foot-bot">
     <div class="foot-copy">© 2025 Just Check Clothing Co. Lagos, Nigeria.</div>
@@ -825,7 +832,7 @@ footer{background:var(--ink);border-top:1px solid rgba(247,246,242,.05);padding:
       <div><div class="mlabel">Quantity</div><div class="qty-row"><button class="qb" onclick="adjQ(-1)">−</button><input class="qn" id="qtyVal" value="1" readonly><button class="qb" onclick="adjQ(1)">+</button></div></div>
       <div class="modal-actions">
         <button class="mact mact-bag" onclick="addFromModal()">Add to Bag</button>
-        <button class="mact mact-paga" onclick="buyNowModal()">Buy Now — Pay via Paga</button>
+        <button class="mact mact-paga" onclick="buyNowModal()">💳 Buy Now — Pay with Card</button>
       </div>
     </div>
   </div>
@@ -866,7 +873,7 @@ footer{background:var(--ink);border-top:1px solid rgba(247,246,242,.05);padding:
     <button class="confirm-x" onclick="closeConfirm()">✕</button>
     <span class="confirm-icon">🛍️</span>
     <div class="confirm-title">Order Summary</div>
-    <p class="confirm-sub">Review your items, then pay via Paga to complete your order. Your order is placed entirely on the website — no need to message us first.</p>
+    <p class="confirm-sub">Review your items, then pay securely on the website by card, bank transfer, or USSD — powered by Paystack.</p>
     <div class="confirm-ref" id="confirmRef"></div>
     <div class="confirm-items" id="confirmItems"></div>
     <div class="confirm-total">
@@ -874,12 +881,11 @@ footer{background:var(--ink);border-top:1px solid rgba(247,246,242,.05);padding:
       <span class="confirm-total-amt" id="confirmTotal"></span>
     </div>
     <div class="confirm-paga-box">
-      <div class="confirm-paga-label">Pay this amount via Paga</div>
-      <div class="confirm-paga-num">1581866786</div>
-      <div class="confirm-paga-hint">Send the exact total above to this Paga number, then tap the button below to confirm your order.</div>
+      <div class="confirm-paga-label">Email for receipt & order updates</div>
+      <input type="email" class="confirm-email-input" id="confirmEmail" placeholder="you@example.com">
     </div>
     <div class="confirm-btns">
-      <button class="confirm-btn confirm-btn-paga" onclick="placeOrder()">✓ I've Paid — Place My Order</button>
+      <button class="confirm-btn confirm-btn-paga" onclick="payWithPaystack()">💳 Pay Now — Secure Checkout</button>
       <button class="confirm-btn confirm-btn-cont" onclick="closeConfirm()">← Continue Shopping</button>
     </div>
   </div>
@@ -1171,11 +1177,12 @@ function toggleCart(){
 
 // ORDER CONFIRMATION
 function resetConfirmBox(){
+  const user = typeof auth !== 'undefined' ? auth.currentUser : null;
   document.getElementById('confirmBoxInner').innerHTML = `
     <button class="confirm-x" onclick="closeConfirm()">✕</button>
     <span class="confirm-icon">🛍️</span>
     <div class="confirm-title">Order Summary</div>
-    <p class="confirm-sub">Review your items, then pay via Paga to complete your order. Your order is placed entirely on the website — no need to message us first.</p>
+    <p class="confirm-sub">Review your items, then pay securely on the website by card, bank transfer, or USSD — powered by Paystack.</p>
     <div class="confirm-ref" id="confirmRef"></div>
     <div class="confirm-items" id="confirmItems"></div>
     <div class="confirm-total">
@@ -1183,12 +1190,11 @@ function resetConfirmBox(){
       <span class="confirm-total-amt" id="confirmTotal"></span>
     </div>
     <div class="confirm-paga-box">
-      <div class="confirm-paga-label">Pay this amount via Paga</div>
-      <div class="confirm-paga-num">1581866786</div>
-      <div class="confirm-paga-hint">Send the exact total above to this Paga number, then tap the button below to confirm your order.</div>
+      <div class="confirm-paga-label">Email for receipt & order updates</div>
+      <input type="email" class="confirm-email-input" id="confirmEmail" placeholder="you@example.com" value="${user&&user.email?user.email:''}">
     </div>
     <div class="confirm-btns">
-      <button class="confirm-btn confirm-btn-paga" onclick="placeOrder()">✓ I've Paid — Place My Order</button>
+      <button class="confirm-btn confirm-btn-paga" onclick="payWithPaystack()">💳 Pay Now — Secure Checkout</button>
       <button class="confirm-btn confirm-btn-cont" onclick="closeConfirm()">← Continue Shopping</button>
     </div>
   `;
@@ -1216,7 +1222,7 @@ function closeConfirm(){
 }
 
 // SEND ORDER NOTIFICATION TO MAKE.COM WEBHOOK
-async function notifyWebhook(items, total, method, ref, customerName, customerEmail) {
+async function notifyWebhook(items, total, method, ref, customerName, customerEmail, paystackRef) {
   try {
     await fetch('https://hook.eu1.make.com/jdrmnfc8fdhmk4xhkcuhxnhkbc7k6c8t', {
       method: 'POST',
@@ -1224,8 +1230,9 @@ async function notifyWebhook(items, total, method, ref, customerName, customerEm
       body: JSON.stringify({
         ref: ref,
         name: customerName || 'Guest',
-        email: customerEmail || 'Not signed in',
+        email: customerEmail || 'Not provided',
         method: method,
+        paystackRef: paystackRef || '',
         total: total,
         items: items.map(i => `${i.name} ${i.color} — Size ${i.size} x${i.qty} — ₦${(i.price*i.qty).toLocaleString()}`).join('\n'),
         timestamp: new Date().toLocaleString('en-NG', {timeZone:'Africa/Lagos'})
@@ -1234,24 +1241,60 @@ async function notifyWebhook(items, total, method, ref, customerName, customerEm
   } catch(e) { console.error('Webhook error:', e); }
 }
 
-async function placeOrder(){
+async function payWithPaystack(){
+  const emailInput = document.getElementById('confirmEmail');
+  const email = emailInput.value.trim();
+  if(!email || !email.includes('@')){
+    emailInput.style.borderColor = '#c0392b';
+    showToast('Please enter a valid email to continue');
+    return;
+  }
+  if(!cart.length) return;
+  const total = cart.reduce((a,i)=>a+i.product.price*i.qty,0);
+  const ref = document.getElementById('confirmRef').textContent.replace('Order Reference: ','');
+
+  if(typeof PaystackPop === 'undefined'){
+    showToast('Payment system loading — try again in a moment');
+    return;
+  }
+
+  const handler = PaystackPop.setup({
+    key: PAYSTACK_PUBLIC_KEY,
+    email: email,
+    amount: Math.round(total * 100), // kobo
+    currency: 'NGN',
+    ref: ref,
+    metadata: {
+      custom_fields: [{ display_name: "Order Reference", variable_name: "order_ref", value: ref }]
+    },
+    callback: function(response){
+      completeOrderAfterPayment(ref, email, response.reference);
+    },
+    onClose: function(){
+      showToast('Payment window closed — your bag is still saved');
+    }
+  });
+  handler.openIframe();
+}
+
+async function completeOrderAfterPayment(ref, email, paystackRef){
   const items = cart.map(i=>({name:i.product.name,color:i.product.color,size:i.size,qty:i.qty,price:i.product.price}));
   const t=cart.reduce((a,i)=>a+i.product.price*i.qty,0);
-  let ref=document.getElementById('confirmRef').textContent.replace('Order Reference: ','');
   const user = typeof auth !== 'undefined' ? auth.currentUser : null;
-  if(window.saveOrder) ref=await window.saveOrder(items,t,'Paga')||ref;
-  await notifyWebhook(items,t,'Paga',ref,user?.displayName,user?.email);
+  if(window.saveOrder) await window.saveOrder(items,t,'Paystack',ref,email,user?.displayName,paystackRef);
+  await notifyWebhook(items,t,'Paystack',ref,user?.displayName,email,paystackRef);
 
   const box = document.getElementById('confirmBoxInner');
   box.innerHTML = `
     <button class="confirm-x" onclick="closeConfirm()">✕</button>
     <span class="confirm-success-icon">✅</span>
-    <div class="confirm-success-title">Order Placed!</div>
-    <p class="confirm-success-text">Thank you for shopping with Just Check. Your order <strong style="color:var(--gold)">${ref}</strong> has been received and is being processed.<br><br>You'll be contacted once your payment is verified and your order is on its way.</p>
+    <div class="confirm-success-title">Payment Successful!</div>
+    <p class="confirm-success-text">Thank you for shopping with Just Check. Your order <strong style="color:var(--gold)">${ref}</strong> has been paid and received.<br><br>A receipt has been sent to ${email}. We'll begin processing your order right away.</p>
     <div class="confirm-btns">
       <button class="confirm-btn confirm-btn-cont" onclick="closeConfirm();cart=[];updateCart()">Continue Shopping →</button>
     </div>
   `;
+  cart=[]; updateCart();
 }
 
 function showToast(msg){
