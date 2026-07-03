@@ -21,6 +21,39 @@
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<!-- Supabase -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  const SUPABASE_URL = 'https://aksmbslsduzahwotbqtu.supabase.co';
+  const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFrc21ic2xzZHV6YWh3b3RicXR1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI5NDU4NjcsImV4cCI6MjA5ODUyMTg2N30.l9D1k0vKAnGfvi6BrNs8AkWk8RaEyPeLBu-JZPXz8AM';
+  const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+
+  // Save order to Supabase
+  window.saveToSupabase = async (orderData) => {
+    try {
+      const { error } = await sb.from('orders').insert([orderData]);
+      if(error) console.error('Supabase insert error:', error);
+    } catch(e) { console.error('Supabase error:', e); }
+  };
+
+  // Track order by reference
+  window.fetchOrderByRef = async (ref) => {
+    try {
+      const { data, error } = await sb.from('orders').select('*').eq('ref', ref.trim().toUpperCase()).single();
+      if(error) return null;
+      return data;
+    } catch(e) { return null; }
+  };
+
+  // Load orders by email
+  window.fetchOrdersByEmail = async (email) => {
+    try {
+      const { data, error } = await sb.from('orders').select('*').eq('customer_email', email).order('created_at', { ascending: false });
+      if(error) return [];
+      return data || [];
+    } catch(e) { return []; }
+  };
+</script>
 <script>
   const firebaseConfig = {
     apiKey: "AIzaSyDPmwywk5LBDnaiKdPqM4tRlOdCBxLka_U",
@@ -534,6 +567,42 @@ footer{background:var(--ink);border-top:1px solid rgba(247,246,242,.05);padding:
   .wa-float{bottom:32px;right:20px}
 }
 
+/* TRACK ORDER MODAL */
+.track-bg{position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:1500;opacity:0;pointer-events:none;transition:opacity var(--t);display:flex;align-items:center;justify-content:center;padding:24px}
+.track-bg.open{opacity:1;pointer-events:all}
+.track-box{background:#111;max-width:540px;width:100%;padding:48px 44px;position:relative}
+.track-title{font-family:var(--fd);font-size:34px;text-transform:uppercase;letter-spacing:2px;margin-bottom:8px}
+.track-sub{font-size:12px;color:rgba(247,246,242,.5);line-height:1.8;margin-bottom:28px}
+.track-input-row{display:flex;gap:0;margin-bottom:24px}
+.track-input{flex:1;background:rgba(247,246,242,.05);border:1px solid rgba(247,246,242,.15);border-right:none;color:var(--paper);padding:14px 16px;font-family:var(--fd);font-size:16px;letter-spacing:2px;text-transform:uppercase;outline:none;transition:border-color var(--fast)}
+.track-input:focus{border-color:var(--gold)}
+.track-input::placeholder{font-family:var(--fb);font-size:12px;letter-spacing:1px;text-transform:none;opacity:.5}
+.track-go{background:var(--gold);color:var(--ink);border:none;padding:14px 24px;font-family:var(--fb);font-size:11px;letter-spacing:2px;text-transform:uppercase;font-weight:600;transition:background var(--fast);white-space:nowrap}
+.track-go:hover{background:var(--gold-l)}
+.track-x{position:absolute;top:16px;right:16px;width:34px;height:34px;background:none;border:1px solid rgba(247,246,242,.1);color:var(--paper);font-size:14px;display:flex;align-items:center;justify-content:center;transition:background var(--fast)}
+.track-x:hover{background:rgba(247,246,242,.08)}
+.track-result{display:none}
+.track-result.show{display:block}
+.track-order-ref{font-family:var(--fd);font-size:24px;color:var(--gold);letter-spacing:2px;margin-bottom:4px}
+.track-status-badge{display:inline-block;padding:6px 16px;font-size:9px;letter-spacing:2.5px;text-transform:uppercase;font-weight:600;margin-bottom:16px}
+.track-status-badge.paid{background:rgba(184,150,90,.15);color:var(--gold);border:1px solid rgba(184,150,90,.3)}
+.track-status-badge.processing{background:rgba(52,152,219,.1);color:#5dade2;border:1px solid rgba(52,152,219,.3)}
+.track-status-badge.shipped{background:rgba(46,204,113,.1);color:#58d68d;border:1px solid rgba(46,204,113,.3)}
+.track-status-badge.delivered{background:rgba(46,204,113,.15);color:#2ecc71;border:1px solid rgba(46,204,113,.4)}
+.track-items-list{margin:16px 0;border:1px solid rgba(247,246,242,.07)}
+.track-item-row{display:flex;justify-content:space-between;padding:10px 14px;font-size:12px;color:rgba(247,246,242,.6);border-bottom:1px solid rgba(247,246,242,.05)}
+.track-item-row:last-child{border-bottom:none}
+.track-total-row{display:flex;justify-content:space-between;padding:12px 14px;background:rgba(184,150,90,.06);font-size:13px}
+.track-note{font-size:11px;color:rgba(247,246,242,.4);line-height:1.7;margin-top:12px;padding:12px 14px;border-left:2px solid rgba(247,246,242,.1)}
+.track-not-found{text-align:center;padding:32px 0;font-size:12px;color:var(--muted)}
+
+/* ORDER STATUS in user panel */
+.order-status-badge{display:inline-block;padding:3px 10px;font-size:8px;letter-spacing:2px;text-transform:uppercase;font-weight:600;margin-left:8px;vertical-align:middle}
+.order-status-badge.paid{background:rgba(184,150,90,.15);color:var(--gold)}
+.order-status-badge.processing{color:#5dade2;background:rgba(52,152,219,.1)}
+.order-status-badge.shipped{color:#58d68d;background:rgba(46,204,113,.1)}
+.order-status-badge.delivered{color:#2ecc71;background:rgba(46,204,113,.15)}
+
 /* RESPONSIVE */
 @media(max-width:1200px){.grid{grid-template-columns:repeat(3,1fr)}.about-sec{grid-template-columns:1fr;gap:70px}.pay-grid{grid-template-columns:1fr 1fr}.reviews-grid{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:960px){
@@ -572,6 +641,7 @@ footer{background:var(--ink);border-top:1px solid rgba(247,246,242,.05);padding:
   <ul class="nav-links">
     <li><a href="#home">Home</a></li><li><a href="#shop">Shop</a></li>
     <li><a href="#about">About</a></li><li><a href="#contact">Contact</a></li>
+    <li><a href="javascript:void(0)" onclick="openTrackModal()" style="color:var(--gold)">Track Order</a></li>
   </ul>
   <div class="nav-actions">
     <button class="nav-size-guide" onclick="openSG()">Size Guide</button>
@@ -589,6 +659,7 @@ footer{background:var(--ink);border-top:1px solid rgba(247,246,242,.05);padding:
   <a href="#shop" onclick="toggleMob()">Shop</a>
   <a href="#about" onclick="toggleMob()">About</a>
   <a href="#contact" onclick="toggleMob()">Contact</a>
+  <a href="javascript:void(0)" onclick="toggleMob();openTrackModal()" style="color:var(--gold)">Track Order</a>
   <div class="mob-nav-bot">
     <a href="javascript:void(0)" onclick="toggleMob();openSG()">Size Guide</a>
     <a href="https://www.instagram.com/justcheckclothing.co" target="_blank">Instagram</a>
@@ -929,6 +1000,21 @@ footer{background:var(--ink);border-top:1px solid rgba(247,246,242,.05);padding:
   </div>
 </div>
 
+<!-- TRACK ORDER MODAL -->
+<div class="track-bg" id="trackBg" onclick="closeTrackOut(event)">
+  <div class="track-box">
+    <button class="track-x" onclick="closeTrackModal()">✕</button>
+    <div class="track-title">Track Order</div>
+    <p class="track-sub">Enter your order reference number to see the current status of your order. It starts with <strong style="color:var(--gold)">JC-</strong> and was shown after payment.</p>
+    <div class="track-input-row">
+      <input class="track-input" id="trackRefInput" placeholder="e.g. JC-ABC123XYZ" maxlength="20"
+        onkeydown="if(event.key==='Enter')doTrackOrder()">
+      <button class="track-go" onclick="doTrackOrder()">Track →</button>
+    </div>
+    <div class="track-result" id="trackResult"></div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
@@ -939,16 +1025,18 @@ function closeAuthOut(e){if(e.target===document.getElementById('authBg'))closeAu
 
 // USER PANEL
 function openUserPanel(){
-  const auth=window._fbAuth;
-  const user=auth?auth.currentUser:null;
+  const fbAuth = typeof auth !== 'undefined' ? auth : null;
+  const user = fbAuth ? fbAuth.currentUser : null;
   if(!user)return;
   document.getElementById('userImg').src=user.photoURL||'';
   document.getElementById('userName').textContent=user.displayName||'';
   document.getElementById('userEmail').textContent=user.email||'';
+  document.getElementById('userOrders').innerHTML='<div style="font-size:12px;color:var(--muted)">Loading orders...</div>';
   document.getElementById('userPanel').classList.add('open');
   document.getElementById('userPanelBg').classList.add('open');
   document.body.style.overflow='hidden';
-  if(window.loadUserOrders)window.loadUserOrders(user.uid);
+  // Load from Supabase using email
+  if(user.email && window.fetchOrdersByEmail) loadUserOrdersSupabase(user.email);
 }
 function closeUserPanel(){
   document.getElementById('userPanel').classList.remove('open');
@@ -1281,16 +1369,39 @@ async function completeOrderAfterPayment(ref, email, paystackRef){
   const items = cart.map(i=>({name:i.product.name,color:i.product.color,size:i.size,qty:i.qty,price:i.product.price}));
   const t=cart.reduce((a,i)=>a+i.product.price*i.qty,0);
   const user = typeof auth !== 'undefined' ? auth.currentUser : null;
-  if(window.saveOrder) await window.saveOrder(items,t,'Paystack',ref,email,user?.displayName,paystackRef);
-  await notifyWebhook(items,t,'Paystack',ref,user?.displayName,email,paystackRef);
+  const customerName = user?.displayName || 'Guest';
+
+  // Save to Supabase (primary)
+  if(window.saveToSupabase){
+    await window.saveToSupabase({
+      ref: ref,
+      paystack_ref: paystackRef,
+      customer_name: customerName,
+      customer_email: email,
+      items: items,
+      total: t,
+      method: 'Paystack',
+      status: 'Payment Received'
+    });
+  }
+
+  // Save to Firebase (backup for logged-in users)
+  if(window.saveOrder) await window.saveOrder(items,t,'Paystack',ref,email,customerName,paystackRef);
+
+  // Notify via Make.com webhook (sends you an email + triggers Supabase Edge Function)
+  await notifyWebhook(items,t,'Paystack',ref,customerName,email,paystackRef);
 
   const box = document.getElementById('confirmBoxInner');
   box.innerHTML = `
     <button class="confirm-x" onclick="closeConfirm()">✕</button>
     <span class="confirm-success-icon">✅</span>
     <div class="confirm-success-title">Payment Successful!</div>
-    <p class="confirm-success-text">Thank you for shopping with Just Check. Your order <strong style="color:var(--gold)">${ref}</strong> has been paid and received.<br><br>A receipt has been sent to ${email}. We'll begin processing your order right away.</p>
+    <p class="confirm-success-text">Thank you for shopping with Just Check!<br><br>
+    Your order <strong style="color:var(--gold)">${ref}</strong> has been confirmed.<br><br>
+    A receipt has been sent to <strong>${email}</strong>.<br>
+    You can track your order anytime using the <strong style="color:var(--gold)">Track Order</strong> link in the menu.</p>
     <div class="confirm-btns">
+      <button class="confirm-btn confirm-btn-paga" onclick="closeConfirm();openTrackModal('${ref}')">📦 Track My Order</button>
       <button class="confirm-btn confirm-btn-cont" onclick="closeConfirm();cart=[];updateCart()">Continue Shopping →</button>
     </div>
   `;
@@ -1305,6 +1416,86 @@ function showToast(msg){
 
 // GOOGLE ANALYTICS EVENTS
 function trackEvent(name,params){if(typeof gtag!=='undefined')gtag('event',name,params)}
+
+// TRACK ORDER
+function openTrackModal(ref=''){
+  document.getElementById('trackBg').classList.add('open');
+  document.body.style.overflow='hidden';
+  document.getElementById('trackResult').classList.remove('show');
+  document.getElementById('trackResult').innerHTML='';
+  if(ref){
+    document.getElementById('trackRefInput').value=ref;
+    setTimeout(doTrackOrder,300);
+  } else {
+    document.getElementById('trackRefInput').value='';
+  }
+}
+function closeTrackModal(){
+  document.getElementById('trackBg').classList.remove('open');
+  document.body.style.overflow='';
+}
+function closeTrackOut(e){if(e.target===document.getElementById('trackBg'))closeTrackModal()}
+
+async function doTrackOrder(){
+  const ref = document.getElementById('trackRefInput').value.trim().toUpperCase();
+  if(!ref){ showToast('Please enter an order reference'); return; }
+  const resultEl = document.getElementById('trackResult');
+  resultEl.innerHTML = '<div style="text-align:center;padding:20px;color:var(--muted);font-size:12px">Looking up your order...</div>';
+  resultEl.classList.add('show');
+
+  const order = await window.fetchOrderByRef(ref);
+  if(!order){
+    resultEl.innerHTML = `
+      <div class="track-not-found">
+        <div style="font-size:28px;margin-bottom:12px">🔍</div>
+        <div style="font-size:12px;letter-spacing:1px;color:var(--muted)">No order found with that reference.<br>Please check and try again.</div>
+      </div>`;
+    return;
+  }
+
+  const statusClass = (order.status||'paid').toLowerCase().replace(/\s+/g,'');
+  const itemsHtml = (order.items||[]).map(i=>`
+    <div class="track-item-row">
+      <span>${i.name} ${i.color} — ${i.size} ×${i.qty}</span>
+      <span>₦${(i.price*i.qty).toLocaleString()}</span>
+    </div>`).join('');
+  const date = new Date(order.created_at).toLocaleDateString('en-NG',{day:'numeric',month:'long',year:'numeric'});
+
+  resultEl.innerHTML = `
+    <div class="track-order-ref">${order.ref}</div>
+    <span class="track-status-badge ${statusClass}">${order.status || 'Payment Received'}</span>
+    <div style="font-size:11px;color:var(--muted);margin-bottom:14px">Ordered on ${date}</div>
+    <div class="track-items-list">
+      ${itemsHtml}
+      <div class="track-total-row">
+        <span style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--muted)">Total Paid</span>
+        <span style="color:var(--gold);font-family:var(--fd);font-size:18px">₦${order.total.toLocaleString()}</span>
+      </div>
+    </div>
+    ${order.tracking_notes?`<div class="track-note">📦 ${order.tracking_notes}</div>`:''}
+    <div class="track-note">Questions? Chat with us on <a href="https://wa.me/2347082448928" target="_blank" style="color:var(--gold)">WhatsApp</a> with your order reference.</div>
+  `;
+}
+
+// UPDATE USER PANEL TO LOAD FROM SUPABASE
+async function loadUserOrdersSupabase(email){
+  const orders = await window.fetchOrdersByEmail(email);
+  const el = document.getElementById('userOrders');
+  if(!el) return;
+  if(!orders.length){
+    el.innerHTML = '<div style="font-size:12px;color:var(--muted)">No orders yet. Start shopping!</div>';
+    return;
+  }
+  el.innerHTML = orders.map(o => {
+    const statusClass = (o.status||'paid').toLowerCase().replace(/\s+/g,'');
+    return `
+    <div class="user-order" style="cursor:pointer" onclick="closeUserPanel();openTrackModal('${o.ref}')">
+      <div class="user-order-ref">${o.ref} <span class="order-status-badge ${statusClass}">${o.status||'Payment Received'}</span></div>
+      <div class="user-order-detail">${(o.items||[]).length} item${(o.items||[]).length!==1?'s':''} · ₦${o.total.toLocaleString()}</div>
+      <div class="user-order-detail" style="margin-top:4px;font-size:10px;color:var(--muted)">${new Date(o.created_at).toLocaleDateString('en-NG',{day:'numeric',month:'short',year:'numeric'})} · Tap to track →</div>
+    </div>`;
+  }).join('');
+}
 
 // SPIN THE WHEEL
 const spinSegments = [
