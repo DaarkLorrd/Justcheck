@@ -1309,22 +1309,37 @@ function closeConfirm(){
   document.body.style.overflow='';
 }
 
-// SEND ORDER NOTIFICATION TO MAKE.COM WEBHOOK
+// SEND ORDER NOTIFICATION — calls Make.com AND Supabase Edge Function for emails
 async function notifyWebhook(items, total, method, ref, customerName, customerEmail, paystackRef) {
+  const payload = {
+    ref: ref,
+    name: customerName || 'Guest',
+    email: customerEmail || 'Not provided',
+    method: method,
+    paystackRef: paystackRef || '',
+    total: total,
+    items: items.map(i => `${i.name} ${i.color} — Size ${i.size} x${i.qty} — ₦${(i.price*i.qty).toLocaleString()}`).join('\n'),
+    timestamp: new Date().toLocaleString('en-NG', {timeZone:'Africa/Lagos'})
+  };
+
+  // Call Supabase Edge Function to send emails (customer receipt + your notification)
+  try {
+    await fetch('https://aksmbslsduzahwotbqtu.supabase.co/functions/v1/send-order-email', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFrc21ic2xzZHV6YWh3b3RicXR1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODI5NDU4NjcsImV4cCI6MjA5ODUyMTg2N30.l9D1k0vKAnGfvi6BrNs8AkWk8RaEyPeLBu-JZPXz8AM'
+      },
+      body: JSON.stringify({...payload, items: items})
+    });
+  } catch(e) { console.error('Edge Function error:', e); }
+
+  // Also call Make.com webhook as backup
   try {
     await fetch('https://hook.eu1.make.com/jdrmnfc8fdhmk4xhkcuhxnhkbc7k6c8t', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        ref: ref,
-        name: customerName || 'Guest',
-        email: customerEmail || 'Not provided',
-        method: method,
-        paystackRef: paystackRef || '',
-        total: total,
-        items: items.map(i => `${i.name} ${i.color} — Size ${i.size} x${i.qty} — ₦${(i.price*i.qty).toLocaleString()}`).join('\n'),
-        timestamp: new Date().toLocaleString('en-NG', {timeZone:'Africa/Lagos'})
-      })
+      body: JSON.stringify(payload)
     });
   } catch(e) { console.error('Webhook error:', e); }
 }
